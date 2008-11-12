@@ -1,0 +1,74 @@
+
+
+label {
+display:block;
+float:left;
+text-align:right;
+font-weight:bold;
+width:30%;
+}
+
+h1 {
+width:100%;
+left:auto;
+right:auto;
+text-align:center;
+}
+
+ul {
+overflow:scroll;
+}
+
+li {
+   list-style:none;
+}
+
+.in {
+color:green;
+}
+
+.notin {
+color:red;
+}
+
+span.street span {
+	margin: 50px;
+}
+
+span.comment {
+display:block;
+float:left;
+width:55%;
+}
+
+span.num {
+display:block;
+float:left;
+width:10%;
+text-align:right;
+}
+
+span.street {
+font-weight: bold;
+}
+
+div.street {
+	display:block;
+	margin-left:50px;
+}
+
+.status {
+display:block;
+float:left;
+width:5%
+}
+
+a {
+text-decoration:none;
+}
+
+div {
+display:block;
+width:32px;
+height:32px;
+}
