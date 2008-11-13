@@ -49,22 +49,34 @@ class GetTiles(webapp.RequestHandler):
         ytop = unit.y - fov
         ybottom = unit.y + fov
         
+        if xleft < 0:
+            xleft = 0
+            
+        if xright < 0:
+            xright = 0
+            
+        if ytop < 0:
+            ytop = 0
+            
+        if ybottom < 0:
+            ybottom = 0
+        
         firstnode = True   
+        
+        reader = png.Reader(os.path.join(os.path.dirname(__file__), 'static', 'genesis.png') ) # streams are also accepted
+        w, h, pixels, metadata = reader.read()
+        pixel_byte_width = 4 if metadata['has_alpha'] else 3
         
         for x in range(xleft, xright):
             for y in range(ytop, ybottom):
                 point = (x, y) # coordinates of pixel to read
                 
-                reader = png.Reader(os.path.join(os.path.dirname(__file__), 'static', 'genesis.png') ) # streams are also accepted
-                w, h, pixels, metadata = reader.read()
-                pixel_byte_width = 4 if metadata['has_alpha'] else 3
+
                 pixel_position = point[0] + point[1] * w
                 
                 pixel = pixels[
                   pixel_position * pixel_byte_width :
                   (pixel_position + 1) * pixel_byte_width]
-                
-                color = pixel[1]
 
                 if firstnode == False:
                     json = json + ","
@@ -72,7 +84,7 @@ class GetTiles(webapp.RequestHandler):
                 json = json + "{"
                 json = json + "x:'" + str(x) + "',"
                 json = json + "y:'" + str(y) + "',"
-                json = json + "data:" + str(color)
+                json = json + "data:" + str(pixel[0])
                 json = json + "}"
                 firstnode = False
         json = json + "]}"    
