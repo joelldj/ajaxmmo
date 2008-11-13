@@ -43,7 +43,7 @@ class GetTiles(webapp.RequestHandler):
     json = "{tiles: ["
     
     for unit in units:
-        fov = 3 # fov is how many tiles a unit can see around it
+        fov = 30 # fov is how many tiles a unit can see around it
         xleft = unit.x - fov
         xright = unit.x + fov
         ytop = unit.y - fov
