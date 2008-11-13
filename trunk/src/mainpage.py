@@ -8,8 +8,9 @@ from google.appengine.api import users
 from google.appengine.ext import webapp
 
 from google.appengine.api import images
-import png
 
+import png
+import os
 
 #from django.utils import simplejson
 
@@ -54,7 +55,7 @@ class GetTiles(webapp.RequestHandler):
             for y in range(ytop, ybottom):
                 point = (x, y) # coordinates of pixel to read
                 
-                reader = png.Reader(filename='genesis.png') # streams are also accepted
+                reader = png.Reader(os.path.join(os.path.dirname(__file__), 'static', 'genesis.png') ) # streams are also accepted
                 w, h, pixels, metadata = reader.read()
                 pixel_byte_width = 4 if metadata['has_alpha'] else 3
                 pixel_position = point[0] + point[1] * w
@@ -67,9 +68,8 @@ class GetTiles(webapp.RequestHandler):
                     json = json + ","
                     
                 json = json + "{"
-                json = json + "x:'" + str(tile.x) + "',"
-                json = json + "y:'" + str(tile.y) + "',"
-                json = json + "id:'" + str(tile.key().id()) + "',"
+                json = json + "x:'" + str(x) + "',"
+                json = json + "y:'" + str(y) + "',"
                 json = json + "data:" + str(color)
                 json = json + "}"
                 firstnode = False
