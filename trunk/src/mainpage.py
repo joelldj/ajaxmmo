@@ -7,6 +7,9 @@ from google.appengine.ext import db
 from google.appengine.api import users
 from google.appengine.ext import webapp
 
+from google.appengine.api import images
+
+
 #from django.utils import simplejson
 
 
@@ -48,6 +51,24 @@ class GetTiles(webapp.RequestHandler):
         
         for x in range(xleft, xright):
             for y in range(ytop, ybottom):
+                # read pixel in heightmap using pil
+                
+#                im = Image.open("genesis.png")
+#                #im.mode = "L"
+#                pix = im.load()
+#                
+#                size = im.size
+#                
+#                firstnode = True
+#                id = 0
+#                json = ""
+#                
+#                f=open('terrain.json', 'a')
+#                
+#                for x in range(0, size[0]):
+#                   for y in range(0, size[1]):
+#                
+                
                 tiles = Tile.gql("""where x = :1 and y = :2""", x, y )
                 for tile in tiles:
                     if firstnode == False:
