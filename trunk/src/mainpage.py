@@ -60,9 +60,11 @@ class GetTiles(webapp.RequestHandler):
                 pixel_byte_width = 4 if metadata['has_alpha'] else 3
                 pixel_position = point[0] + point[1] * w
                 
-                color = pixels[
+                pixel = pixels[
                   pixel_position * pixel_byte_width :
                   (pixel_position + 1) * pixel_byte_width]
+                
+                color = pixel[1]
 
                 if firstnode == False:
                     json = json + ","
