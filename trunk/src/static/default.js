@@ -15,19 +15,19 @@ $(document).ready(function(){
 		$.each(json.tiles, function(i,data){
 			/* if $(this.id) exists then access it with $("#id"). then change if required */
 			/* tiles should not have not refresh as much as Units */
-				if ($(this.id).is("*")){
-					$(this.id).html(this.id)
+				if ($("x" + this.x + "y" + this.y).is("*")){
+					$("x" + this.x + "y" + this.y).html("red:" + this.data)
 		    		.css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px"})
-		    		.attr("id", this.id).click( function(){ 
+		    		.attr("id", "x" + this.x + "y" + this.y).click( function(){ 
 		    	    	$.post("/click?id=" + this.id);
 		    	    });
 					/* a click event should be bound to the Tile to pass cursor location to background process */
 				} else {
 					$("<div class='tile'>").appendTo("body")
-		    		.html(this.id)
+		    		.html("red:" + this.data)
 		    		.css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px"})
-		    		.attr("id", this.id).click( function(){ 
-		    	    	$.post("/click?id=" + this.id);
+		    		.attr("id", "x" + this.x + "y" + this.y).click( function(){ // id == x#y#
+		    	    	$.post("/click?id=" + this.id); 
 		    	    });
 				}
     	});
