@@ -84,7 +84,7 @@ class GetTiles(webapp.RequestHandler):
                 json = json + "{"
                 json = json + "x:'" + str(x) + "',"
                 json = json + "y:'" + str(y) + "',"
-                json = json + "data:" + str(pixel[0])
+                json = json + "data:'" + str(pixel[1]) + "'"
                 json = json + "}"
                 firstnode = False
         json = json + "]}"    
