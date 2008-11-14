@@ -1,6 +1,6 @@
 $(document).ready(function(){
 	
-	var tilesize = 64;
+	var tilesize = 32;
     
     /* 
     	getJSON string of tiles that have not yet been send to the browser
@@ -15,26 +15,26 @@ $(document).ready(function(){
 		$.each(json.tiles, function(i,data){
 			/* if $(this.id) exists then access it with $("#id"). then change if required */
 			/* tiles should not have not refresh as much as Units */
+			
+			tilecolor = "rgb(" + this.data + "," + this.data + "," + this.data + ")";
+			
 				if ($("x" + this.x + "y" + this.y).is("*")){
-					$("x" + this.x + "y" + this.y).html("red:" + this.data)
-		    		.css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px"})
+					$("x" + this.x + "y" + this.y).html("")
+		    		.css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px",backgroundColor: tilecolor})
 		    		.attr("id", "x" + this.x + "y" + this.y).click( function(){ 
 		    	    	$.post("/click?id=" + this.id);
 		    	    });
 					/* a click event should be bound to the Tile to pass cursor location to background process */
 				} else {
 					$("<div class='tile'>").appendTo("body")
-		    		.html("red:" + this.data)
-		    		.css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px"})
+		    		.html("")
+		    		.css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px",backgroundColor: tilecolor})
 		    		.attr("id", "x" + this.x + "y" + this.y).click( function(){ // id == x#y#
 		    	    	$.post("/click?id=" + this.id); 
 		    	    });
 				}
     	});
     }
-    
-    
-
     
     function placeUnits(json){
 		$.each(json.tiles, function(i,data){
