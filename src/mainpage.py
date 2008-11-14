@@ -43,29 +43,29 @@ class GetTiles(webapp.RequestHandler):
     json = "{tiles: ["
     
     for unit in units:
-        fov = 30 # fov is how many tiles a unit can see around it
+        fov = 20 # fov is how many tiles a unit can see around it
         xleft = unit.x - fov
         xright = unit.x + fov
         ytop = unit.y - fov
         ybottom = unit.y + fov
         
+        reader = png.Reader(os.path.join(os.path.dirname(__file__), 'static', 'earth.png') ) # streams are also accepted
+        w, h, pixels, metadata = reader.read()
+        pixel_byte_width = 4 if metadata['has_alpha'] else 3
+        
         if xleft < 0:
             xleft = 0
             
-        if xright < 0:
-            xright = 0
+        if xright > w:
+            xright = w
             
         if ytop < 0:
             ytop = 0
             
-        if ybottom < 0:
-            ybottom = 0
+        if ybottom > h:
+            ybottom = h
         
         firstnode = True   
-        
-        reader = png.Reader(os.path.join(os.path.dirname(__file__), 'static', 'genesis.png') ) # streams are also accepted
-        w, h, pixels, metadata = reader.read()
-        pixel_byte_width = 4 if metadata['has_alpha'] else 3
         
         for x in range(xleft, xright):
             for y in range(ytop, ybottom):
