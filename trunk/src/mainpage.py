@@ -13,6 +13,23 @@ import png
 import os
 
 #from django.utils import simplejson
+
+class MainPage(webapp.RequestHandler):
+  def get(self):
+    head = """<html><head><title>Mainpage</title>"""
+    head = head + """<script src="/static/jquery-1.2.6.min.js" type="text/javascript"></script>"""
+    head = head + """<script src="/static/default.js" type="text/javascript"></script>"""
+    head = head + """<link href="/static/default.css" rel="stylesheet" type="text/css" /></head>"""
+    head = head + """<body>"""
+    
+    self.response.out.write(head)
+    
+    self.response.out.write("""
+          </div>
+        </body>
+      </html>""")
+
+
     
 class GetTiles(webapp.RequestHandler):
   def get(self):
