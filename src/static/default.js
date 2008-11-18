@@ -1,4 +1,8 @@
 $(document).ready(function(){
+	//loader();
+});
+
+$(document).ready(function(){
 	loader();
 });
 
