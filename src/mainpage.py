@@ -13,22 +13,6 @@ import png
 import os
 
 #from django.utils import simplejson
-
-
-class MainPage(webapp.RequestHandler):
-  def get(self):
-    head = """<html><head><title>Mainpage</title>"""
-    head = head + """<script src="/static/jquery-1.2.6.min.js" type="text/javascript"></script>"""
-    head = head + """<script src="/static/default.js" type="text/javascript"></script>"""
-    head = head + """<link href="/static/default.css" rel="stylesheet" type="text/css" /></head>"""
-    head = head + """<body>"""
-    
-    self.response.out.write(head)
-    
-    self.response.out.write("""
-          </div>
-        </body>
-      </html>""")
     
 class GetTiles(webapp.RequestHandler):
   def get(self):
@@ -36,10 +20,8 @@ class GetTiles(webapp.RequestHandler):
     # should get the tiles, within proximity of units.
     # foreach unit, get tiles within range of the unit
     # in this instance limit it to 1 unit only
-    units = Unit.gql("where user = :1 limit 1", users.get_current_user() )
+    units = Unit.gql("where user = :1", users.get_current_user() )
 
-    alltiles = []
-    
     json = "{tiles: ["
     
     for unit in units:
@@ -69,8 +51,7 @@ class GetTiles(webapp.RequestHandler):
         
         for x in range(xleft, xright):
             for y in range(ytop, ybottom):
-                point = (x, y) # coordinates of pixel to read
-                
+                point = (x, y) # coordinates of pixel to read                
 
                 pixel_position = point[0] + point[1] * w
                 
@@ -134,7 +115,7 @@ class ClickOnTile(webapp.RequestHandler):
   def post(self):
 
     tile = Tile.get_by_id(int(self.request.get("id"))) #.all()
-    tile.type = 0
+    #tile.type = 0
     tile.put()
     
     self.response.out.write("success ")
