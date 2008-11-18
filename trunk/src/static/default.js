@@ -8,25 +8,13 @@ $(document).ready(function(){
 	function placeTiles(json){
 		$.each(json.tiles, function(i,data){
 			tilecolor = "rgb(" + this.data + "," + this.data + "," + this.data + ")";
-			
-			if ($("x" + this.x + "y" + this.y).is("*")){
-				$("x" + this.x + "y" + this.y).html("")
-	    		.css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px",backgroundColor: tilecolor})
-	    		.attr("id", "x" + this.x + "y" + this.y).click( function(){ 
-	    			
-	    	    	$.post("/click?id=" + this.id);
-	    	    });
-
-			} else {
-				$("<div class='tile'>").appendTo("body")
-	    		.html("")
-	    		.css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px",backgroundColor: tilecolor})
-	    		.attr("id", "x" + this.x + "y" + this.y).click( function(){ // id == x#y#
-	    			
-	    	    	$.post("/click?id=" + this.id);
-	    	    	
-	    	    });
-			}
+	
+			$("<div class='tile'>").appendTo("body")
+    		.html("")
+    		.css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px",backgroundColor: tilecolor})
+    		.attr("id", "x" + this.x + "y" + this.y).click( function(){ // id == x#y#
+    			$.post("/click?id=" + this.id);
+    		}
     	});
     }
     
