@@ -1,9 +1,12 @@
 function postTile(id){
+	document.write("tile clicked");
 	$.post("/click?id=" + this.id);
 }
 
 function placeTile(i,data)
 {
+	document.write("tile added");
+	
 	var tilesize = 32;
 	var tilecolor;
 	
@@ -15,6 +18,7 @@ function placeTile(i,data)
 }
 
 function placeTiles(json){
+	document.write("adding tiles");
 	$.each(json.tiles, placeTile(i,data));
 }
 
@@ -40,12 +44,15 @@ function placeUnits(json){
 }
 
 function loader(){	
+	alert("getting tiles");
     $.getJSON('/tile', placeTiles );
+    
+    alert("getting units");
     $.getJSON('/unit', placeUnits );	
-}
-
+}	
 
 $(document).ready(function(){
-	loader();
+	document.write("ready");
+	loader();	
 });
 
