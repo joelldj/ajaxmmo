@@ -1,14 +1,17 @@
-var tilesize = 32;
-
 function placeTile(i,data)
 {
+	var tilesize = 32;
+	var tilecolor;
+	
 	tilecolor = "rgb(" + this.data + "," + this.data + "," + this.data + ")";
 
 	$("<div class='tile'>").appendTo("body")
 	.css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px",backgroundColor: tilecolor})
-	.attr("id", "x" + this.x + "y" + this.y).click( function(){ // id == x#y#
-		$.post("/click?id=" + this.id);
-	}
+	.attr("id", "x" + this.x + "y" + this.y).click( PostTile(this.id) );
+}
+
+function PostTile(id){
+	$.post("/click?id=" + this.id);
 }
 
 function placeTiles(json){
@@ -36,7 +39,7 @@ function placeUnits(json){
 	});
 }
 
-function loader(){
+function loader(){	
     $.getJSON('/tile', placeTiles );
     $.getJSON('/unit', placeUnits );	
 }
