@@ -39,7 +39,7 @@ class GetTiles(webapp.RequestHandler):
     # in this instance limit it to 1 unit only
     units = Unit.gql("where user = :1", users.get_current_user() )
 
-    json = "{tiles: ["
+    json = "{'tiles': ["
     
     for unit in units:
         fov = 5 # fov is how many tiles a unit can see around it
@@ -80,12 +80,12 @@ class GetTiles(webapp.RequestHandler):
                     json = json + ","
                     
                 json = json + "{"
-                json = json + "x:'" + str(x) + "',"
-                json = json + "y:'" + str(y) + "',"
-                json = json + "data:'" + str(pixel[1]) + "'"
+                json = json + "'x':'" + str(x) + ","
+                json = json + "'y':'" + str(y) + ","
+                json = json + "'data':'" + str(pixel[1]) + "'"
                 json = json + "}"
                 firstnode = False
-        json = json + "]}"    
+    json = json + "]}"    
             
     self.response.out.write(json)
 
