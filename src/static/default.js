@@ -7,10 +7,10 @@ function placeTile(i,data)
 
 	$("<div class='tile'>").appendTo("body")
 	.css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px",backgroundColor: tilecolor})
-	.attr("id", "x" + this.x + "y" + this.y).click( PostTile(this.id) );
+	.attr("id", "x" + this.x + "y" + this.y).click( postTile(this.id) );
 }
 
-function PostTile(id){
+function postTile(id){
 	$.post("/click?id=" + this.id);
 }
 
