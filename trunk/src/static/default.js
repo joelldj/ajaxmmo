@@ -44,8 +44,9 @@ function placeUnits(json){
 }
 
 function loader(){	
-	alert("getting tiles");
-    $.getJSON('/tile', placeTiles );
+	//alert("getting tiles");
+    //$.getJSON('/tile', placeTiles );
+	$.getJSON('/tile');
     
     //alert("getting units");
     //$.getJSON('/unit', placeUnits );	
