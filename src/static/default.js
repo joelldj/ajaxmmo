@@ -16,7 +16,7 @@ function placeTiles(json){
                                 /* a click event should be bound to the Tile to pass cursor location to background process */
                         } else {
                                 $("<div class='tile'>").appendTo("body")
-                        .html("")
+                        .html("x" + this.x + "y" + this.y)
                         .css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px",backgroundColor: tilecolor, zIndex: "1"})
                         .attr("id", "x" + this.x + "y" + this.y).click( function(){ // id == x#y#
                         $.post("/click?id=" + this.id);
