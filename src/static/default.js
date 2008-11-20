@@ -17,12 +17,12 @@ function placeTile(i,data)
 	.attr("id", "x" + this.x + "y" + this.y).click( postTile(this.id) );
 }
 
-function placeTiles(json){
+function placeTiles(i,data){
 	document.write("adding tiles");
 	$.each(json.tiles, placeTile(i,data));
 }
 
-function placeUnits(json){
+function placeUnits(i,data){
 	$.each(json.tiles, function(i,data){
 
 		if ($(this.id).is("*")){
@@ -45,9 +45,8 @@ function placeUnits(json){
 
 function loader(){	
 	//alert("getting tiles");
-    //$.getJSON('/tile', placeTiles );
-	$.getJSON('/tile');
-    
+    $.getJSON('/tile', placeTiles(i,data) );
+   
     //alert("getting units");
     //$.getJSON('/unit', placeUnits );	
 }	
