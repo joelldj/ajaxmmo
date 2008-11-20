@@ -120,7 +120,12 @@ class InitUnit(webapp.RequestHandler):
     
 class ClickOnTile(webapp.RequestHandler):
   def post(self):
-
+    #find out what has been clicked and do the appropriate action
+    
+    #if a tile is clicked, move the selected unit towards that tile
+    
+    #if a unit is clicked then select it
+    
     #tile = Tile.get_by_id(int(self.request.get("id"))) #.all()
     #tile.type = 0
     #tile.put()
