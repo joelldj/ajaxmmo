@@ -1,30 +1,26 @@
 function placeTiles(json){
-            $.each(json.tiles, function(i,data){
-                    tilecolor = "rgb(" + this.data + "," + this.data + "," + this.data + ")";
-               
-                if ($("x" + this.x + "y" + this.y).is("*")){
-                        $("x" + this.x + "y" + this.y).html("")
-                .css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px",backgroundColor: tilecolor})
-                .attr("id", "x" + this.x + "y" + this.y).click( function(){
-                       
-                $.post("/click?id=" + this.id);
-            });
+	var tilesize = 32;
+	
+	alert("hi here");
+	
+    $.each(json.tiles, function(i,data){
+    	
+    	tilecolor = "rgb(" + this.alt + "," + this.alt + "," + this.alt + ")";
 
-                } else {
-                        $("<div class='tile'>").appendTo("body")
-                .html("")
-                .css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px",backgroundColor: tilecolor})
-                .attr("id", "x" + this.x + "y" + this.y).click( function(){ // id == x#y#
-                       
-                $.post("/click?id=" + this.id);
-                   
-                });
-                    }
+                $("<div class='tile'>").appendTo("body")
+        .html(this.id)
+        .css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px"})
+        .attr("id", this.id).click( function(){
+        $.post("/click?id=" + this.id);
+        });
     });
 }
-   
+
 function placeUnits(json){
-        $.each(json.tiles, function(i,data){
+	
+	var tilesize = 32;
+	
+        $.each(json.units, function(i,data){
                 if ($(this.id).is("*")){
                     $(this.id).html(this.id)
             .css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px"})
@@ -33,7 +29,7 @@ function placeUnits(json){
         });
 
             } else {
-                    $("<div class='tile'>").appendTo("body")
+                    $("<div class='unit'>").appendTo("body")
             .html(this.id)
             .css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px"})
             .attr("id", this.id).click( function(){
@@ -45,8 +41,14 @@ function placeUnits(json){
    
 
 $(document).ready(function(){
-    var tilesize = 32;
-    $.getJSON('/tile', placeTiles );
+	$.getJSON('/tile',function(data){
+		alert("hi");
+	});
+	
+	$.getJSON('/tile', 
+    		placeTiles 
+    );
+    
     $.getJSON('/unit', placeUnits );
 });
 

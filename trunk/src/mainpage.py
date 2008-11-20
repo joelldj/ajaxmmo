@@ -39,7 +39,9 @@ class GetTiles(webapp.RequestHandler):
     # in this instance limit it to 1 unit only
     units = Unit.gql("where user = :1", users.get_current_user() )
 
-    json = "{'tiles': ["
+    json = """{"tiles": ["""
+    
+    firstnode = True   
     
     for unit in units:
         fov = 5 # fov is how many tiles a unit can see around it
@@ -64,10 +66,12 @@ class GetTiles(webapp.RequestHandler):
         if ybottom > h:
             ybottom = h
         
-        firstnode = True   
-        
         for x in range(xleft, xright):
             for y in range(ytop, ybottom):
+                
+                if firstnode == False:
+                    json = json + ","
+                
                 point = (x, y) # coordinates of pixel to read                
 
                 pixel_position = point[0] + point[1] * w
@@ -75,17 +79,15 @@ class GetTiles(webapp.RequestHandler):
                 pixel = pixels[
                   pixel_position * pixel_byte_width :
                   (pixel_position + 1) * pixel_byte_width]
-
-                if firstnode == False:
-                    json = json + ","
                     
                 json = json + "{"
-                json = json + "'x':'" + str(x) + ","
-                json = json + "'y':'" + str(y) + ","
-                json = json + "'data':'" + str(pixel[1]) + "'"
+                json = json + """"x":""" + str(x) + ","
+                json = json + """"y":""" + str(y) + ","
+                json = json + """"alt":""" + str(pixel[1]) + ""
                 json = json + "}"
                 firstnode = False
-    json = json + "]}"    
+        firstnode = False
+    json = json + "]}"
             
     self.response.out.write(json)
 
@@ -94,14 +96,14 @@ class GetUnits(webapp.RequestHandler):
         units = Unit.gql("where user = :1 limit 1", users.get_current_user() )
         firstnode = True
         
-        json = "{units: ["
+        json = """{"units": ["""
         for unit in units:
             if firstnode == False:
                 json = json + ","
             json = json + "{"
-            json = json + "x:'" + str(unit.x) + "',"
-            json = json + "y:'" + str(unit.y) + "',"
-            json = json + "id:'" + str(unit.key().id()) + "'"
+            json = json + """"x":""" + str(unit.x) + ","
+            json = json + """"y":""" + str(unit.y) + ","
+            json = json + """"id":""" + str(unit.key().id()) + ""
             json = json + "}"
             firstnode = False
         json = json + "]}"
