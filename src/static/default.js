@@ -17,7 +17,7 @@ function placeTiles(json){
                         } else {
                                 $("<div class='tile'>").appendTo("body")
                         .html("")
-                        .css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px",backgroundColor: tilecolor})
+                        .css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px",backgroundColor: tilecolor, zIndex: "1"})
                         .attr("id", "x" + this.x + "y" + this.y).click( function(){ // id == x#y#
                         $.post("/click?id=" + this.id);
                     });
@@ -28,18 +28,18 @@ function placeTiles(json){
     function placeUnits(json){
                 $.each(json.units, function(i,data){
                         /* if $(this.id) exists then access it with $("#id"). then change if required */
-                        if ($(this.id).is("*")){
-                                $(this.id).html(this.id)
+                        if ($("u" + this.id).is("*")){
+                                $("u" + this.id).html(this.id)
                         .css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px"})
                         .attr("id", this.id).click( function(){
                         $.post("/click?id=" + this.id);
                     });
                                 /* click event should be bound to the Unit to send to the background process */
                         } else {
-                                $("<div class='tile'>").appendTo("body")
+                                $("<div class='unit'>").appendTo("body")
                         .html(this.id)
-                        .css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px"})
-                        .attr("id", this.id).click( function(){
+                        .css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px", zIndex: "2", backgroundColor: "red"})
+                        .attr("id", "u" + this.id).click( function(){
                         $.post("/click?id=" + this.id);
                     });
                         }
