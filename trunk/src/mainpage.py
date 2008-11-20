@@ -43,28 +43,16 @@ class GetTiles(webapp.RequestHandler):
     
     firstnode = True   
     
-    for unit in units:
-        fov = 5 # fov is how many tiles a unit can see around it
-        xleft = unit.x - fov
-        xright = unit.x + fov
-        ytop = unit.y - fov
-        ybottom = unit.y + fov
-        
+    for unit in units:        
         reader = png.Reader(os.path.join(os.path.dirname(__file__), 'static', 'earth.png') ) # streams are also accepted
         w, h, pixels, metadata = reader.read()
         pixel_byte_width = 4 if metadata['has_alpha'] else 3
         
-        if xleft < 0:
-            xleft = 0
-            
-        if xright > w:
-            xright = w
-            
-        if ytop < 0:
-            ytop = 0
-            
-        if ybottom > h:
-            ybottom = h
+        fov = 10 # fov is how many tiles a unit can see around it
+        xleft = max(unit.x - fov, 0)
+        xright = min(unit.x + fov, w)
+        ytop = max(unit.y - fov, 0)
+        ybottom = min(unit.y + fov, h)
         
         for x in range(xleft, xright):
             for y in range(ytop, ybottom):
