@@ -52,7 +52,7 @@ class GetTiles(webapp.RequestHandler):
         xleft = max(unit.x - fov, 0)
         xright = min(unit.x + fov, w)
         ytop = max(unit.y - fov, 0)
-        ybottom = min(unit.y + fov, h)
+        ybottom = min(unit.y + fov - 3, h)
         
         for x in range(xleft, xright):
             for y in range(ytop, ybottom):
