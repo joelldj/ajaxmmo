@@ -44,7 +44,7 @@ class GetTiles(webapp.RequestHandler):
     firstnode = True   
     
     for unit in units:
-        fov = 10 # fov is how many tiles a unit can see around it
+        fov = 5 # fov is how many tiles a unit can see around it
         xleft = unit.x - fov
         xright = unit.x + fov
         ytop = unit.y - fov
