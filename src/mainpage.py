@@ -44,7 +44,7 @@ class GetTiles(webapp.RequestHandler):
     firstnode = True   
     
     for unit in units:
-        fov = 5 # fov is how many tiles a unit can see around it
+        fov = 10 # fov is how many tiles a unit can see around it
         xleft = unit.x - fov
         xright = unit.x + fov
         ytop = unit.y - fov
@@ -133,9 +133,9 @@ class InitUnit(webapp.RequestHandler):
 class ClickOnTile(webapp.RequestHandler):
   def post(self):
 
-    tile = Tile.get_by_id(int(self.request.get("id"))) #.all()
+    #tile = Tile.get_by_id(int(self.request.get("id"))) #.all()
     #tile.type = 0
-    tile.put()
+    #tile.put()
     
     self.response.out.write("success ")
     
