@@ -5,10 +5,12 @@ function placeTiles(json){
                 /* if $(this.id) exists then access it with $("#id"). then change if required */
                 /* tiles should not have not refresh as much as Units */
                
-        tilecolor = "rgb(" + this.alt + "," + this.alt + "," + this.alt + ")";
+        //tilecolor = "rgb(" + this.alt + "," + this.alt + "," + this.alt + ")";
+        	
+        tilecolor = "rgb(0,250,0)";
                
 		if ($("x" + this.x + "y" + this.y).is("*")){
-		        $("x" + this.x + "y" + this.y).html("")
+		        $("x" + this.x + "y" + this.y).html(this.x + ":" + this.y)
 		        .css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px",backgroundColor: tilecolor})
 		        .attr("id", "x" + this.x + "y" + this.y).click( function(){
 		        	$.getJSON("/click?id=" + this.id, placeTiles );
@@ -16,7 +18,7 @@ function placeTiles(json){
 		        /* a click event should be bound to the Tile to pass cursor location to background process */
 		} else {
 		        $("<div class='tile'>").appendTo("body")
-		        .html("x" + this.x + "y" + this.y)
+		        .html(this.x + ":" + this.y)
 		        .css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px",backgroundColor: tilecolor, zIndex: "1"})
 		        .attr("id", "x" + this.x + "y" + this.y).click( function(){ // id == x#y#
 		        	$.getJSON("/click?id=" + this.id, placeTiles );
