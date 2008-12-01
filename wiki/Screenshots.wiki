@@ -1,1 +1,8 @@
+Early terrain Demo
+
 http://ajaxmmo.googlecode.com/svn/trunk/screenshot-14-nov-2008.png
+
+
+Fog of war idea, each units sees 2 units further
+
+http://code.google.com/p/ajaxmmo/source/browse/trunk/screenshot-1-dec-2008.png
