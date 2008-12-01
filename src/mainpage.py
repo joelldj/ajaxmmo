@@ -48,11 +48,11 @@ class GetTiles(webapp.RequestHandler):
         w, h, pixels, metadata = reader.read()
         pixel_byte_width = 4 if metadata['has_alpha'] else 3
         
-        fov = 5 # fov is how many tiles a unit can see around it
+        fov =  2# fov is how many tiles a unit can see around it
         xleft = max(unit.x - fov, 0)
-        xright = min(unit.x + fov, w)
+        xright = min(unit.x + fov + 1, w)
         ytop = max(unit.y - fov, 0)
-        ybottom = min(unit.y + fov - 3, h)
+        ybottom = min(unit.y + fov + 1, h)
         
         for x in range(xleft, xright):
             for y in range(ytop, ybottom):
@@ -67,11 +67,41 @@ class GetTiles(webapp.RequestHandler):
                 pixel = pixels[
                   pixel_position * pixel_byte_width :
                   (pixel_position + 1) * pixel_byte_width]
+                
+                alt = pixel[1]
+                
+                if alt > 25:
+                    tile = "sea"
                     
+                if alt > 50:
+                    tile = "sand"
+                    
+                if alt > 75:
+                    tile = "dune"
+                    
+                if alt > 100:
+                    tile = "rock"
+                    
+                if alt > 125:
+                    tile = "plain"
+                    
+                if alt > 150:
+                    tile = "savanah"
+                    
+                if alt > 175:
+                    tile = "hill"
+                    
+                if alt > 200:
+                    tile = "cliff"
+                    
+                if alt > 225:
+                    tile = "peak"
+                    
+                
                 json = json + "{"
-                json = json + """"x":""" + str(x) + ","
-                json = json + """"y":""" + str(y) + ","
-                json = json + """"alt":""" + str(pixel[1]) + ""
+                json = json + "\"x\":" + str(x) + ","
+                json = json + "\"y\":" + str(y) + ","
+                json = json + "\"alt\":\"" + str(tile) + "\""
                 json = json + "}"
                 firstnode = False
         firstnode = False
@@ -81,7 +111,7 @@ class GetTiles(webapp.RequestHandler):
 
 class GetUnits(webapp.RequestHandler):
     def get(self):
-        units = Unit.gql("where user = :1 limit 1", users.get_current_user() )
+        units = Unit.gql("where user = :1", users.get_current_user() )
         firstnode = True
         
         json = """{"units": ["""
