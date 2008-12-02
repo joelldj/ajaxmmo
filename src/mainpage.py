@@ -113,7 +113,6 @@ class GetTiles(webapp.RequestHandler):
 class GetUnits(webapp.RequestHandler):
     def get(self):
         units = Unit.gql("where user = :1", users.get_current_user() )
-        firstnode = True
         
         json = {"units":[]}
         
