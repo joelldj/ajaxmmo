@@ -12,7 +12,8 @@ from google.appengine.api import images
 import png
 import os
 
-#from django.utils import simplejson
+import demjson
+
 
 class MainPage(webapp.RequestHandler):
   def get(self):
@@ -114,20 +115,13 @@ class GetUnits(webapp.RequestHandler):
         units = Unit.gql("where user = :1", users.get_current_user() )
         firstnode = True
         
-        json = """{"units": ["""
-        for unit in units:
-            if firstnode == False:
-                json = json + ","
-            json = json + "{"
-            json = json + """"x":""" + str(unit.x) + ","
-            json = json + """"y":""" + str(unit.y) + ","
-            json = json + """"id":""" + str(unit.key().id()) + ""
-            json = json + "}"
-            firstnode = False
-        json = json + "]}"
-            
-        self.response.out.write(json)
+        json = {"units":[]}
         
+        for unit in units:
+            json["units"].append( {"x":unit.x, "y":unit.x, "id":unit.key().id() } )
+            
+        self.response.out.write(demjson.encode(json))
+            
     
 class InitTile(webapp.RequestHandler):
   def post(self):
