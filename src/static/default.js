@@ -11,7 +11,7 @@ function placeTiles(json){
                
 		if ($("x" + this.x + "y" + this.y).is("*")){
 		        $("x" + this.x + "y" + this.y).html(this.x + ":" + this.y)
-		        .css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px",backgroundColor: tilecolor})
+		        .css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px",backgroundColor: tilecolor, zIndex: "1"})
 		        .attr("id", "x" + this.x + "y" + this.y).click( function(){
 		        	$.getJSON("/click?id=" + this.id, placeTiles );
 		        });
@@ -31,15 +31,15 @@ function placeTiles(json){
                 $.each(json.units, function(i,data){
                         /* if $(this.id) exists then access it with $("#id"). then change if required */
                         if ($("u" + this.id).is("*")){
-                                $("u" + this.id).html(this.id)
-                                .css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px"})
+                                $("u" + this.id).html(this.x + ":" + this.y)
+                                .css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px", zIndex: "2"})
                                 .attr("id", this.id).click( function(){
                                 	$.getJSON("/click?id=" + this.id, placeUnits ); 
                                 });
                                 /* click event should be bound to the Unit to send to the background process */
                         } else {
                                 $("<div class='unit'>").appendTo("body")
-                                .html(this.id)
+                                .html(this.x + ":" + this.y)
                                 .css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px", zIndex: "2", backgroundColor: "red"})
                                 .attr("id", "u" + this.id).click( function(){
                                 	$.getJSON("/click?id=" + this.id, placeUnits ); 

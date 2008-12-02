@@ -49,7 +49,7 @@ class GetTiles(webapp.RequestHandler):
         w, h, pixels, metadata = reader.read()
         pixel_byte_width = 4 if metadata['has_alpha'] else 3
         
-        fov =  2# fov is how many tiles a unit can see around it
+        fov =  5# fov is how many tiles a unit can see around it
         xleft = max(unit.x - fov, 0)
         xright = min(unit.x + fov + 1, w)
         ytop = max(unit.y - fov, 0)
@@ -117,7 +117,7 @@ class GetUnits(webapp.RequestHandler):
         json = {"units":[]}
         
         for unit in units:
-            json["units"].append( {"x":unit.x, "y":unit.x, "id":unit.key().id() } )
+            json["units"].append( {"x":unit.x, "y":unit.y, "id":unit.key().id() } )
             
         self.response.out.write(demjson.encode(json))
             
