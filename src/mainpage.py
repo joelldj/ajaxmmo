@@ -1,4 +1,5 @@
 import datetime
+import re
 
 from models import Tile
 from models import Unit
@@ -131,12 +132,13 @@ class InitUnit(webapp.RequestHandler):
     
     
 class ClickOnTile(webapp.RequestHandler):
-  def post(self):
+  def get(self):
     #find out what has been clicked and do the appropriate action
     
     # if a tile is clicked, move the selected unit towards that tile
     # find out the x and y coords from the request string
     # then determine x and y directions
+    xy = re.match('x(\d+)y(\d+)', self.request.get("id")).groups()
     
     # if a unit is clicked then select it
     # set the current unit to memcache
@@ -149,7 +151,7 @@ class ClickOnTile(webapp.RequestHandler):
     self.response.out.write("success ")
     
 class MenuAction(webapp.RequestHandler):
-    def post(selfself):
+    def post(self):
         # get the name of the clicked menu action
         action = self.request.get("action")
         
