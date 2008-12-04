@@ -39,64 +39,61 @@ class GetTiles(webapp.RequestHandler):
     # should get the tiles, within proximity of units.
     # foreach unit, get tiles within range of the unit
     # in this instance limit it to 1 unit only
-    units = Unit.gql("where user = :1", users.get_current_user() )
+    unit = Unit.get_by_id( int(self.request.get("id")) )
 
     json = {"tiles":[]}
+         
+    reader = png.Reader(os.path.join(os.path.dirname(__file__), 'static', 'earth.png') ) # streams are also accepted
+    w, h, pixels, metadata = reader.read()
+    pixel_byte_width = 4 if metadata['has_alpha'] else 3
     
-    firstnode = True   
+    fov =  5# fov is how many tiles a unit can see around it
+    xleft = max(unit.x - fov, 0)
+    xright = min(unit.x + fov + 1, w)
+    ytop = max(unit.y - fov, 0)
+    ybottom = min(unit.y + fov + 1, h)
     
-    for unit in units:        
-        reader = png.Reader(os.path.join(os.path.dirname(__file__), 'static', 'earth.png') ) # streams are also accepted
-        w, h, pixels, metadata = reader.read()
-        pixel_byte_width = 4 if metadata['has_alpha'] else 3
+    for x in range(xleft, xright):
+        for y in range(ytop, ybottom):
+            
+            point = (x, y) # coordinates of pixel to read                
         
-        fov =  5# fov is how many tiles a unit can see around it
-        xleft = max(unit.x - fov, 0)
-        xright = min(unit.x + fov + 1, w)
-        ytop = max(unit.y - fov, 0)
-        ybottom = min(unit.y + fov + 1, h)
-        
-        for x in range(xleft, xright):
-            for y in range(ytop, ybottom):
+            pixel_position = point[0] + point[1] * w
+            
+            pixel = pixels[
+              pixel_position * pixel_byte_width :
+              (pixel_position + 1) * pixel_byte_width]
+            
+            alt = pixel[1]
+            
+            if alt > 25:
+                tile = "sea"
                 
-                point = (x, y) # coordinates of pixel to read                
-
-                pixel_position = point[0] + point[1] * w
+            if alt > 50:
+                tile = "sand"
                 
-                pixel = pixels[
-                  pixel_position * pixel_byte_width :
-                  (pixel_position + 1) * pixel_byte_width]
+            if alt > 75:
+                tile = "dune"
                 
-                alt = pixel[1]
+            if alt > 100:
+                tile = "rock"
                 
-                if alt > 25:
-                    tile = "sea"
-                    
-                if alt > 50:
-                    tile = "sand"
-                    
-                if alt > 75:
-                    tile = "dune"
-                    
-                if alt > 100:
-                    tile = "rock"
-                    
-                if alt > 125:
-                    tile = "plain"
-                    
-                if alt > 150:
-                    tile = "savanah"
-                    
-                if alt > 175:
-                    tile = "hill"
-                    
-                if alt > 200:
-                    tile = "cliff"
-                    
-                if alt > 225:
-                    tile = "peak"
-                    
-                json["tiles"].append( {"x":x, "y":y, "alt":tile } )
+            if alt > 125:
+                tile = "plain"
+                
+            if alt > 150:
+                tile = "savanah"
+                
+            if alt > 175:
+                tile = "hill"
+                
+            if alt > 200:
+                tile = "cliff"
+                
+            if alt > 225:
+                tile = "peak"
+                
+            json["tiles"].append( {"x":x, "y":y, "alt":tile } )
             
     self.response.out.write(demjson.encode(json))
 
