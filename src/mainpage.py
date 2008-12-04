@@ -40,7 +40,7 @@ class GetTiles(webapp.RequestHandler):
     # in this instance limit it to 1 unit only
     units = Unit.gql("where user = :1", users.get_current_user() )
 
-    json = """{"tiles": ["""
+    json = {"tiles":[]}
     
     firstnode = True   
     
@@ -57,9 +57,6 @@ class GetTiles(webapp.RequestHandler):
         
         for x in range(xleft, xright):
             for y in range(ytop, ybottom):
-                
-                if firstnode == False:
-                    json = json + ","
                 
                 point = (x, y) # coordinates of pixel to read                
 
@@ -98,17 +95,9 @@ class GetTiles(webapp.RequestHandler):
                 if alt > 225:
                     tile = "peak"
                     
-                
-                json = json + "{"
-                json = json + "\"x\":" + str(x) + ","
-                json = json + "\"y\":" + str(y) + ","
-                json = json + "\"alt\":\"" + str(tile) + "\""
-                json = json + "}"
-                firstnode = False
-        firstnode = False
-    json = json + "]}"
+                json["tiles"].append( {"x":x, "y":y, "alt":tile } )
             
-    self.response.out.write(json)
+    self.response.out.write(demjson.encode(json))
 
 class GetUnits(webapp.RequestHandler):
     def get(self):
@@ -145,9 +134,13 @@ class ClickOnTile(webapp.RequestHandler):
   def post(self):
     #find out what has been clicked and do the appropriate action
     
-    #if a tile is clicked, move the selected unit towards that tile
+    # if a tile is clicked, move the selected unit towards that tile
+    # find out the x and y coords from the request string
+    # then determine x and y directions
     
-    #if a unit is clicked then select it
+    # if a unit is clicked then select it
+    # set the current unit to memcache
+    # http://code.google.com/appengine/docs/memcache/usingmemcache.html
     
     #tile = Tile.get_by_id(int(self.request.get("id"))) #.all()
     #tile.type = 0
