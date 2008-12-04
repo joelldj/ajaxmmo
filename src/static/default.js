@@ -9,10 +9,10 @@ function placeTiles(json){
         	
         tilecolor = "rgb(0,250,0)";
                
-		if ($("x" + this.x + "y" + this.y).is("*")){
-		        $("x" + this.x + "y" + this.y).html(this.x + ":" + this.y)
+		if ($(this.x + "-" + this.y).is("*")){
+		        $(this.x + "-" + this.y).html(this.x + ":" + this.y)
 		        .css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px",backgroundColor: tilecolor, zIndex: "1"})
-		        .attr("id", "x" + this.x + "y" + this.y).click( function(){
+		        .attr("id", this.x + "-" + this.y).click( function(){
 		        	$.getJSON("/click?id=" + this.id, placeTiles );
 		        });
 		        /* a click event should be bound to the Tile to pass cursor location to background process */
@@ -20,7 +20,7 @@ function placeTiles(json){
 		        $("<div class='tile'>").appendTo("body")
 		        .html(this.x + ":" + this.y)
 		        .css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px",backgroundColor: tilecolor, zIndex: "1"})
-		        .attr("id", "x" + this.x + "y" + this.y).click( function(){ // id == x#y#
+		        .attr("id", this.x + "-" + this.y).click( function(){ // id == x#y#
 		        	$.getJSON("/click?id=" + this.id, placeTiles );
 		        });
 		}

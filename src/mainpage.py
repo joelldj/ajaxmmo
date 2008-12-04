@@ -138,7 +138,7 @@ class ClickOnTile(webapp.RequestHandler):
     # if a tile is clicked, move the selected unit towards that tile
     # find out the x and y coords from the request string
     # then determine x and y directions
-    xy = re.match('x(\d+)y(\d+)', self.request.get("id")).groups()
+    xy = re.match('(\d+)-(\d+)', self.request.get("id")).groups()
     
     # if a unit is clicked then select it
     # set the current unit to memcache
@@ -148,7 +148,7 @@ class ClickOnTile(webapp.RequestHandler):
     #tile.type = 0
     #tile.put()
     
-    self.response.out.write("success ")
+    self.response.out.write("success " + xy[0] + " " + xy[1])
     
 class MenuAction(webapp.RequestHandler):
     def post(self):
