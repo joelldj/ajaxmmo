@@ -29,6 +29,9 @@ function placeTiles(json){
    
     function placeUnits(json){
                 $.each(json.units, function(i,data){
+                	
+                    	$.getJSON('/tile?id=' + this.id, placeTiles );
+                	
                         /* if $(this.id) exists then access it with $("#id"). then change if required */
                         if ($("u" + this.id).is("*")){
                                 $("u" + this.id).html(this.x + ":" + this.y)
@@ -41,7 +44,7 @@ function placeTiles(json){
                                 $("<div class='unit'>").appendTo("body")
                                 .html(this.x + ":" + this.y)
                                 .css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px", zIndex: "2", backgroundColor: "red"})
-                                .attr("id", "u" + this.id).click( function(){
+                                .attr("id", this.id).click( function(){
                                 	$.getJSON("/click?id=" + this.id, placeUnits ); 
                                 });
                         }
@@ -50,7 +53,6 @@ function placeTiles(json){
 
 
 $(document).ready(function(){
-    $.getJSON('/tile', placeTiles );
     $.getJSON('/unit', placeUnits ); 
 });
 
