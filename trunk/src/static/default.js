@@ -5,7 +5,7 @@ function placeTiles(json){
 		        /* a click event should be bound to the Tile to pass cursor location to background process */
 		        $("<div class='tile'>").appendTo("body")
 				.addClass(this.alt) /* class comes from json, then the tile has two classes such as .tile and .grass */
-		        .html("<i>" + this.x + ":" + this.y + "</i>")
+//		        .html(this.alt)
 		        .css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px", zIndex: "1"})
 		        .attr("id", "tile" + this.x + "-" + this.y).click( function(){ // id = x-y
 		        	// clicking on a tile we repeat the cycle of loading units then retrieving what they can see
@@ -22,7 +22,7 @@ function placeTiles(json){
                 	$.getJSON('/tile?id=' + this.id, placeTiles );
             	
                     $("<div class='unit'>").appendTo("body")
-                    .html(this.x + ":" + this.y)
+                    .html("unit")
                     .css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px", zIndex: "2", backgroundColor: "red"})
                     .attr("id", "unit" + this.id).click( function(){
                     	$.getJSON("/click?id=" + this.id, placeUnits ); 
