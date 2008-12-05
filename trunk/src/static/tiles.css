@@ -7,7 +7,7 @@
 }
 
 .plain {
-	background-position:32px 64px;
+	background-position:0px -32px;
 }
 
 .savanah {
@@ -22,7 +22,14 @@
 	background-position:64px 64px;
 }
 
+.dune { 
+	background-position:64px 64px;
+}
+
+.hill { 
+	background-position:64px 64px;
+}
 
 .unknown {
-	background-color: black;
+	background-position:50px 50px;
 }
