@@ -5,3 +5,24 @@
 .grass {
 	background-position:0px 0px;
 }
+
+.plain {
+	background-position:32px 64px;
+}
+
+.savanah {
+	background-position:32px 32px;
+}
+
+.sea {
+	background-position:64px 32px;
+}
+
+.sand {
+	background-position:64px 64px;
+}
+
+
+.unknown {
+	background-color: black;
+}
