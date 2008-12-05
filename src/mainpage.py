@@ -138,7 +138,7 @@ class ClickOnTile(webapp.RequestHandler):
     # if a tile is clicked, move the selected unit towards that tile
     # find out the x and y coords from the request string
     # then determine x and y directions
-    xy = re.match('(\d+)-(\d+)', self.request.get("id")).groups()
+    xy = re.match('tile(\d+)-(\d+)', self.request.get("id")).groups()
     
     # if a unit is clicked then select it
     # set the current unit to memcache, or pass json to this every time with the list of unit id's and which tile is clicked.
@@ -151,6 +151,9 @@ class ClickOnTile(webapp.RequestHandler):
         unit.x = unit.x + 1
         unit.y = unit.y + 1
         unit.put()
+        
+        
+    units = Unit.gql("where user = :1", users.get_current_user() )    
     
     # send units back to the front end.
     json = {"units":[]}
