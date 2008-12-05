@@ -67,6 +67,8 @@ class GetTiles(webapp.RequestHandler):
             
             alt = pixel[1]
             
+            tile = "unknown"
+            
             if alt > 25:
                 tile = "sea"
                 
@@ -139,17 +141,28 @@ class ClickOnTile(webapp.RequestHandler):
     xy = re.match('(\d+)-(\d+)', self.request.get("id")).groups()
     
     # if a unit is clicked then select it
-    # set the current unit to memcache
+    # set the current unit to memcache, or pass json to this every time with the list of unit id's and which tile is clicked.
     # http://code.google.com/appengine/docs/memcache/usingmemcache.html
     
-    #tile = Tile.get_by_id(int(self.request.get("id"))) #.all()
-    #tile.type = 0
-    #tile.put()
+    units = Unit.gql("where user = :1", users.get_current_user() )
     
-    self.response.out.write("success " + xy[0] + " " + xy[1])
+    #move units
+    for unit in units:
+        unit.x = unit.x + 1
+        unit.y = unit.y + 1
+        unit.put()
+    
+    # send units back to the front end.
+    json = {"units":[]}
+    
+    for unit in units:
+        json["units"].append( {"x":unit.x, "y":unit.y, "id":unit.key().id() } )
+        
+    self.response.out.write(demjson.encode(json))
+
     
 class MenuAction(webapp.RequestHandler):
-    def post(self):
+    def get(self):
         # get the name of the clicked menu action
         action = self.request.get("action")
         
