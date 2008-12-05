@@ -1,0 +1,7 @@
+.tile {
+	background-image:url('/static/ground.png');
+}
+
+.grass {
+	background-position:0px 0px;
+}
