@@ -2,10 +2,8 @@
 function placeTiles(json){
 	$.each(json.tiles, function(i,data){
 		/* a click event should be bound to the Tile to pass cursor location to background process */
-
 		var tile = new isogame.Tile( this.x+","+this.y, "", this.x,this.y);
 		scene.addTile( tile );    
-	    
 	});
 }
    
@@ -28,14 +26,15 @@ function placeUnits(json){
 
 function principal(){
 	isogame.EventManager.process();
-	s.update();
 };
 
 
 $(document).ready(function(){
 	scene = new isogame.Scene();
+	
 	$.getJSON('/unit', placeUnits );
-	scene.draw("screen");
 	isogame.mainloop( principal, 50 );
+	
+	scene.draw("screen");
 });
 
