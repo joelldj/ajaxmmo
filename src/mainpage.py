@@ -25,13 +25,9 @@ class MainPage(webapp.RequestHandler):
     head = head + """<link href="/static/tiles.css" rel="stylesheet" type="text/css" />"""
     head = head + """</head><body>"""
     
-    head = head + """<div id="map"></div>
-    """
-    
     self.response.out.write(head)
     
     self.response.out.write("""
-          </div>
         </body>
       </html>""")
 
@@ -45,17 +41,19 @@ class GetTiles(webapp.RequestHandler):
     # in this instance limit it to 1 unit only
     unit = Unit.get_by_id( int(self.request.get("id")) )
 
-    json = {"tiles":[]}
+    json = {"tiles":[],"debug":[]}
          
     reader = png.Reader(os.path.join(os.path.dirname(__file__), 'static', 'earth.png') ) # streams are also accepted
     w, h, pixels, metadata = reader.read()
-    pixel_byte_width = 4 if metadata['has_alpha'] else 3
+    pixel_byte_width =  4 if metadata['has_alpha'] else 3
     
     fov =  2# fov is how many tiles a unit can see around it
     xleft = max(unit.x - fov, 0)
-    xright = min(unit.x + fov + 1, w)
+    xright = min(unit.x + fov, w)
     ytop = max(unit.y - fov, 0)
-    ybottom = min(unit.y + fov + 1, h)
+    ybottom = min(unit.y + fov, h)
+    
+    json["debug"].append( {"xleft":xleft, "xright":xright, "ytop":ytop, "ybottom":ybottom, "yrange":range(ytop,ybottom), "xrange":range(xleft, xright)} )
     
     for x in range(xleft, xright):
         for y in range(ytop, ybottom):
