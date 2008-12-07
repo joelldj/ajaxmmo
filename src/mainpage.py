@@ -41,7 +41,7 @@ class GetTiles(webapp.RequestHandler):
     # in this instance limit it to 1 unit only
     unit = Unit.get_by_id( int(self.request.get("id")) )
 
-    json = {"tiles":[],"debug":[],"pixels":[]}
+    json = {"tiles":[]}
          
     reader = png.Reader(os.path.join(os.path.dirname(__file__), 'static', 'earth.png') ) # streams are also accepted
     w, h, pixels, metadata = reader.read()
@@ -53,9 +53,6 @@ class GetTiles(webapp.RequestHandler):
     ytop = max(unit.y - fov, 0)
     ybottom = min(unit.y + fov + 1, h)
     
-    #json["pixels"].append( pixels )
-    #json["debug"].append( {"xleft":xleft, "xright":xright, "ytop":ytop, "ybottom":ybottom, "yrange":range(ytop,ybottom), "xrange":range(xleft, xright)} )
-    
     for x in range(xleft, xright):
         for y in range(ytop, ybottom):
             
@@ -66,37 +63,8 @@ class GetTiles(webapp.RequestHandler):
               (pixel_position + 1) * pixel_byte_width]
             
             alt = pixel[1]
-            
-            tile = "unknown"
-            
-            if alt > 25:
-                tile = "sea"
-                
-            if alt > 50:
-                tile = "sand"
-                
-            if alt > 75:
-                tile = "dune"
-                
-            if alt > 100:
-                tile = "rock"
-                
-            if alt > 125:
-                tile = "plain"
-                
-            if alt > 150:
-                tile = "savanah"
-                
-            if alt > 175:
-                tile = "hill"
-                
-            if alt > 200:
-                tile = "cliff"
-                
-            if alt > 225:
-                tile = "peak"
-                
-            json["tiles"].append( {"x":x, "y":y, "alt":tile } )
+                            
+            json["tiles"].append( {"x":x, "y":y, "alt":alt } )
             
     self.response.out.write(demjson.encode(json))
 
@@ -162,10 +130,10 @@ class ClickOnTile(webapp.RequestHandler):
             unit.y = unit.y + 1
             
         unit.put()
-        
-        
-        
+         
+         
     units = Unit.gql("where user = :1", users.get_current_user() )    
+    
     
     # send units back to the front end.
     json = {"units":[]}

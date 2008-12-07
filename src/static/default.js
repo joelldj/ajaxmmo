@@ -5,7 +5,7 @@ function placeTiles(json){
 	
 	$.each(json.tiles, function(i,data){
 		
-		var isox = Math.round((this.x - this.y) * h * 0.5) + xoffset
+		var isox = Math.round((this.x - this.y) * h * 0.5) + xoffset;
 		var isoy = Math.round((this.x + this.y) * w * 0.25) - yoffset
 		
 		$("<div class='iso'>").appendTo("body")
@@ -25,8 +25,8 @@ function placeUnits(json){
 	$.each(json.units, function(i,data){
 		$.getJSON('/tile?id=' + this.id, placeTiles );
 
-		var isox = Math.round((this.x - this.y) * h * 0.5) + xoffset
-		var isoy = Math.round((this.x + this.y) * w * 0.25) - yoffset
+		var isox = Math.round((this.x - this.y) * h * 0.5) + xoffset;
+		var isoy = Math.round((this.x + this.y) * w * 0.25) - yoffset;
 	    	
 		$("<div class='unit'>").appendTo("body")
 		.css({zIndex:isoy+1,"position": "absolute","width": w + "px","height": h + "px","background-image": "url('/static/img/isobldg.gif')","left": isox,"top": isoy})
