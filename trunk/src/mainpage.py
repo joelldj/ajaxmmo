@@ -26,6 +26,15 @@ class MainPage(webapp.RequestHandler):
     head = head + """<link href="/static/tiles.css" rel="stylesheet" type="text/css" />"""
     head = head + """</head><body>"""
     
+    head = head + """
+        
+    <div id="press"></div>
+    
+    <div id="coords"></div>
+    <div id="cambio"></div>
+    <div id="screen"></div>
+    """
+    
     self.response.out.write(head)
     
     self.response.out.write("""
