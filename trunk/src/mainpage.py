@@ -19,20 +19,13 @@ import demjson
 class MainPage(webapp.RequestHandler):
   def get(self):
     head = """<html><head><title>Mainpage</title>"""
-    head = head + """<script src="/static/jquery-1.2.6.min.js" type="text/javascript"></script>"""
-    head = head + """<script src="/static/isogame.js" type="text/javascript"></script>"""
+    head = head + """<script src="/static/jquery-1.2.6.min.js" type="text/javascript"></script>""
     head = head + """<script src="/static/default.js" type="text/javascript"></script>"""
     head = head + """<link href="/static/default.css" rel="stylesheet" type="text/css" />"""
     head = head + """<link href="/static/tiles.css" rel="stylesheet" type="text/css" />"""
     head = head + """</head><body>"""
     
-    head = head + """
-        
-    <div id="press"></div>
-    
-    <div id="coords"></div>
-    <div id="cambio"></div>
-    <div id="screen"></div>
+    head = head + """<div id="map"></div>
     """
     
     self.response.out.write(head)
