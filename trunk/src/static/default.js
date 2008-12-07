@@ -1,38 +1,38 @@
 
 function placeTiles(json){
-	var h=47, w=74;
+	var h=40, w=40;
+	var offset = 1;
 	
-	$.each(json.tiles, function(i,data){	
-		$("<div class='unit'>").appendTo("body")
-		.html("unit")
-		.css(
-				{
-					position: "absolute",
-					width: w,
-					height: h,
-					left: this.x*tilesize+"px",
-					top: Math.round(this.y*h/2) + "px",
-					left: Math.round(x*w+((y&1)==1?w/2:0)) + "px",
-					zIndex: "2",
-					background-image:url('/static/img/tile.gif')
-				}
-			)
-		.attr("id", "unit" + this.id)
-	}
+	$.each(json.tiles, function(i,data){
+		var isoy = Math.round((this.y+offset)*h/4) + "px";
+		var isox = Math.round(this.x*w+((this.y&1)==1?w/2:0)) + "px";
+		
+		$("<div class='iso'>").appendTo("body")
+		.html(this.x + ":" + this.y)
+		.css({zIndex:this.y,"position": "absolute","width": w + "px","height": h + "px","background-image": "url('/static/img/tile.gif')","left": isox,"top": isoy})
+		.attr("id", "tile" + this.x + "-" + this.y).click(function(){
+			$.getJSON("/click?id=" + this.id, placeUnits ); 
+		});
+	});
 }
 
 
 function placeUnits(json){
 	$(".unit").remove();
+	var tilesize = 32;
+	var h=40, w=40;
+	var offset = 1;
 
 	$.each(json.units, function(i,data){
 		$.getJSON('/tile?id=' + this.id, placeTiles );
+
+		var isoy = Math.round((this.y+offset)*h/4) + "px";
+		var isox = Math.round(this.x*w+((this.y&1)==1?w/2:0)) + "px";
 	    	
 		$("<div class='unit'>").appendTo("body")
-		.html("unit")
-		.css({position: "absolute", left: this.x*tilesize+"px", top: this.y*tilesize+"px", zIndex: "2", backgroundColor: "red"})
+		.css({zIndex:this.y+1,"position": "absolute","width": w + "px","height": h + "px","background-image": "url('/static/img/isobldg.gif')","left": isox,"top": isoy})
 		.attr("id", "unit" + this.id).click( function(){
-		$.getJSON("/click?id=" + this.id, placeUnits ); 
+			$.getJSON("/click?id=" + this.id, placeUnits ); 
 		});
 	});
 }
