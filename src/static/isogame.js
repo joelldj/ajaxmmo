@@ -199,7 +199,7 @@ var isogame={
 } //>>>
 ,"Tile":function( id, img, x, y ){ //<<<
 	isogame.Sprite.apply(this,new Array(id, "s" ));
-	this.src['s'] = "img/tilefill.php?color="+color;
+	this.src['s'] = "img/tile.gif";
 	this.offset['s'] = new Array(0,0);
 	this.setXYZ( x, y );
 	this.draw = function( where ){ //<<<

@@ -1,14 +1,14 @@
 <html>
 	<head>
 		<title>JS Iso</title>
-		<script language="javascript" src="js/isogame.js"></script>
+		<script language="javascript" src="isogame.js"></script>
 		<script>
 			id = 0;
-			color = "<?if($color){echo $color;}else{echo "AFB8D5";}?>";
+			color = "AFB8D5";
 			window.onload=function(){
 				// Create a Sprite
 				s = new isogame.Sprite("test", "w");
-				s.src['s'] = "img/tilefill.php?color="+color;
+				s.src['s'] = "img/tile.gif";
 				s.src['w'] = "img/monito_fre.gif";
 				s.src['e'] = "img/monito_der.gif";
 				s.dim_z = 89;
