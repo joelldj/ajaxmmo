@@ -41,7 +41,7 @@ class GetTiles(webapp.RequestHandler):
     # in this instance limit it to 1 unit only
     unit = Unit.get_by_id( int(self.request.get("id")) )
 
-    json = {"tiles":[],"debug":[]}
+    json = {"tiles":[],"debug":[],"pixels":[]}
          
     reader = png.Reader(os.path.join(os.path.dirname(__file__), 'static', 'earth.png') ) # streams are also accepted
     w, h, pixels, metadata = reader.read()
@@ -49,18 +49,17 @@ class GetTiles(webapp.RequestHandler):
     
     fov =  2# fov is how many tiles a unit can see around it
     xleft = max(unit.x - fov, 0)
-    xright = min(unit.x + fov, w)
+    xright = min(unit.x + fov + 1, w)
     ytop = max(unit.y - fov, 0)
-    ybottom = min(unit.y + fov, h)
+    ybottom = min(unit.y + fov + 1, h)
     
-    json["debug"].append( {"xleft":xleft, "xright":xright, "ytop":ytop, "ybottom":ybottom, "yrange":range(ytop,ybottom), "xrange":range(xleft, xright)} )
+    #json["pixels"].append( pixels )
+    #json["debug"].append( {"xleft":xleft, "xright":xright, "ytop":ytop, "ybottom":ybottom, "yrange":range(ytop,ybottom), "xrange":range(xleft, xright)} )
     
     for x in range(xleft, xright):
         for y in range(ytop, ybottom):
             
-            point = (x, y) # coordinates of pixel to read                
-        
-            pixel_position = point[0] + point[1] * w
+            pixel_position = (y * w) + x
             
             pixel = pixels[
               pixel_position * pixel_byte_width :
