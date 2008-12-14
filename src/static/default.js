@@ -38,8 +38,8 @@ function placeUnits(json){
 
 function mouseMove(){
 	$("#world").mousemove(function(e){
-		var x = e.clientX;
-		var y = e.clientY;
+		var x = e.clientX - 20;
+		var y = e.clientY - 20;
 		var w = 40;
 		var h = 20;
 		
