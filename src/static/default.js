@@ -1,36 +1,54 @@
 var xoffset = 900, yoffset = 300;
+var tilesize=40; // width and height of the tiles (formulas should be scalable, this won't be needed)
+var units, tiles;
+
+function getIso(tilesize,x,y){
+	// make tiles with the back of the tile at half the width of the tile
+	var isox = Math.round((x - y) * (tilesize * 0.5)) + xoffset;
+	var isoy = Math.round((x + y) * (tilesize * 0.25)) - yoffset;
+	
+	return {x:isox,y:isoy};
+}
+
+function getWorldPos(w,x,y){
+	var h = w/2; // the tile images should be as high as half width.
+	var y_3d = Math.round( ((w*y) - (h*x)) / (w*h) );
+	var x_3d = Math.round( ((w*y) + (h*x)) / (w*h) )-1;
+	
+	return {x:(x_3d-7),y:(y_3d+37)};	
+}
 
 function placeTiles(json){
 	var h=40, w=40;
 	
 	$.each(json.tiles, function(i,data){
-		
-		var isox = Math.round((this.x - this.y) * h * 0.5) + xoffset;
-		var isoy = Math.round((this.x + this.y) * w * 0.25) - yoffset
-		
+		iso = getIso(tilesize,this.x,this.y);
+
 		$("<div class='iso'>").appendTo("#world")
-		.css({zIndex:isoy,"position": "absolute","width": w + "px","height": h + "px","background-image": "url('/static/img/tile.gif')","left": isox,"top": isoy})
-		.attr("id", "tile" + this.x + "-" + this.y).click(function(){
+		.css({zIndex:iso.y,"position": "absolute","width": tilesize + "px","height": tilesize + "px","background-image": "url('/static/img/tile.gif')","left": iso.x,"top": iso.y})
+		.attr("id", "tile" + this.x + "-" + this.y) 
+		.attr("x", this.x) // give it custom attributes for x and y
+		.attr("y", this.y)
+		.click(function(){
 			$.getJSON("/click?id=" + this.id, placeUnits ); 
 		});
 	});
 }
 
-function placeUnits(json){
+function placeUnits(){
 	$(".unit").remove();
-	var tilesize = 32;
-	var h=40, w=40;
 
-	$.each(json.units, function(i,data){
+	$(units).each(function(i, data){
 		$.getJSON('/tile?id=' + this.id, placeTiles );
 		
-		// quick
-		var screenx = Math.round((this.x - this.y) * h * 0.5) + xoffset;
-		var screeny = Math.round((this.x + this.y) * w * 0.25) - yoffset;
+		iso = getIso(tilesize,this.x,this.y);
 		
 		$("<div class='unit'>").appendTo("#world")
-		.css({zIndex:screeny+1,"position": "absolute","width": w + "px","height": h + "px","background-image": "url('/static/img/isobldg.gif')","left": screenx,"top": screeny})
-		.attr("id", "unit" + this.id).click( function(){
+		.css({zIndex:iso.y+1,"position": "absolute","width": tilesize + "px","height": tilesize + "px","background-image": "url('/static/img/isobldg.gif')","left": iso.x,"top": iso.y})
+		.attr("id", "unit" + this.id)
+		.attr("x", this.x)
+		.attr("y", this.y)
+		.click( function(){
 			$.getJSON("/click?id=" + this.id, placeUnits ); 
 		});
 	});
@@ -41,19 +59,24 @@ function mouseMove(){
 		var x = e.clientX - 20;
 		var y = e.clientY - 20;
 		var w = 40;
-		var h = 20;
 		
-		var x_3d = Math.round( ((w*y) - (h*x)) / (w*h) );
-		var y_3d = Math.round( ((w*y) + (h*x)) / (w*h) )-1;
+		worldpos = getWorldPos(w,x,y);
+
+		iso = getIso(tilesize,worldpos.x,worldpos.y);
 		
-		$("#coords").text("x:" + (x_3d+35) + " y:" + (y_3d - 9))
-		.css({zIndex:1000,"position": "absolute","left": x ,"top": y});
-	    
+		$("#cursor")
+		.css({zIndex:iso.y+2,"position": "absolute","width": tilesize + "px","height": tilesize + "px","background-image": "url('/static/img/cursor.gif')","left": iso.x,"top": iso.y});
 	  });
 }
 
 $(document).ready(function(){
-	$.getJSON('/unit', placeUnits, xoffset, yoffset );
+	
+	$.getJSON('/unit', function(json){
+		units = json.units;
+		placeUnits();	
+	});
+
 	mouseMove();
+	
 });
 
