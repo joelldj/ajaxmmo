@@ -13,9 +13,9 @@ function getIso(tilesize,x,y){
 function getWorldPos(w,x,y){
 	var h = w/2; // the tile images should be as high as half width.
 	var y_3d = Math.round( ((w*y) - (h*x)) / (w*h) );
-	var x_3d = Math.round( ((w*y) + (h*x)) / (w*h) )-1;
+	var x_3d = Math.round( ((w*y) + (h*x)) / (w*h) );
 	
-	return {x:(x_3d-7),y:(y_3d+37)};	
+	return {x:(x_3d-9),y:(y_3d+37)};	
 }
 
 function placeTiles(json){
@@ -56,7 +56,7 @@ function placeUnits(){
 
 function mouseMove(){
 	$("#world").mousemove(function(e){
-		var x = e.clientX - 20;
+		var x = e.clientX - 10;
 		var y = e.clientY - 20;
 		var w = 40;
 		
