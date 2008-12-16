@@ -49,7 +49,10 @@ function placeUnits(){
 		.attr("x", this.x)
 		.attr("y", this.y)
 		.click( function(){
-			$.getJSON("/click?id=" + this.id, placeUnits ); 
+			$.getJSON("/click?id=" + this.id, function(json){
+				units = json.units;
+				placeUnits();	
+			});
 		});
 	});
 }
