@@ -29,8 +29,11 @@ function placeTiles(json){
 		.attr("id", "tile" + this.x + "-" + this.y) 
 		.attr("x", this.x) // give it custom attributes for x and y
 		.attr("y", this.y)
-		.click(function(){
-			$.getJSON("/click?id=" + this.id, placeUnits ); 
+		.click( function(){
+			$.getJSON("/click?id=" + this.id, function(json){
+				units = json.units;
+				placeUnits();	
+			});
 		});
 	});
 }
