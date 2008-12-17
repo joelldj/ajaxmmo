@@ -18,6 +18,12 @@ function getWorldPos(w,x,y){
 	return {x:(x_3d-9),y:(y_3d+37)};	
 }
 
+jQuery.fn.sprite = function(iso, spriteimg, heightoffset){
+	return this.each(function(){
+			$(this).css({zIndex:iso.y+heightoffset,"position": "absolute","width": tilesize + "px","height": tilesize + "px","background-image": "url('/static/img/" + spriteimg + ".gif')","left": iso.x,"top": iso.y})
+		});
+}
+
 function placeTiles(json){
 	var h=40, w=40;
 	
@@ -25,7 +31,7 @@ function placeTiles(json){
 		iso = getIso(tilesize,this.x,this.y);
 
 		$("<div class='iso'>").appendTo("#world")
-		.css({zIndex:iso.y,"position": "absolute","width": tilesize + "px","height": tilesize + "px","background-image": "url('/static/img/tile.gif')","left": iso.x,"top": iso.y})
+		.sprite(iso, "tile", 0) // tile.gif, is the lowest sprite to draw.
 		.attr("id", "tile" + this.x + "-" + this.y) 
 		.attr("x", this.x) // give it custom attributes for x and y
 		.attr("y", this.y)
@@ -47,7 +53,7 @@ function placeUnits(){
 		iso = getIso(tilesize,this.x,this.y);
 		
 		$("<div class='unit'>").appendTo("#world")
-		.css({zIndex:iso.y+1,"position": "absolute","width": tilesize + "px","height": tilesize + "px","background-image": "url('/static/img/isobldg.gif')","left": iso.x,"top": iso.y})
+		.sprite(iso, "unit", 1) // units are above tiles 
 		.attr("id", "unit" + this.id)
 		.attr("x", this.x)
 		.attr("y", this.y)
@@ -70,8 +76,8 @@ function mouseMove(){
 
 		iso = getIso(tilesize,worldpos.x,worldpos.y);
 		
-		$("#cursor")
-		.css({zIndex:iso.y+2,"position": "absolute","width": tilesize + "px","height": tilesize + "px","background-image": "url('/static/img/cursor.gif')","left": iso.x,"top": iso.y});
+		$("#cursor").sprite(iso, "cursor", 5) // cursor should be shown on top of all other sprites
+
 	  });
 }
 
