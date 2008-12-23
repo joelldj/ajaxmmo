@@ -30,8 +30,16 @@ function placeTiles(json){
 	$.each(json.tiles, function(i,data){
 		iso = getIso(tilesize,this.x,this.y);
 
+		var tiletype;
+
+		tiletype = "tile";
+
+		if (this.alt < 50){
+		    tiletype = "water";
+		}
+
 		$("<div class='iso'>").appendTo("#world")
-		.sprite(iso, "tile", 0) // tile.gif, is the lowest sprite to draw.
+		.sprite(iso, tiletype, 0) // tile.gif, is the lowest sprite to draw.
 		.attr("id", "tile" + this.x + "-" + this.y) 
 		.attr("x", this.x) // give it custom attributes for x and y
 		.attr("y", this.y)
