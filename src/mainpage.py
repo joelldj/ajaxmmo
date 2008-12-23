@@ -71,7 +71,16 @@ class GetTiles(webapp.RequestHandler):
 class GetUnits(webapp.RequestHandler):
     def get(self):
         units = Unit.gql("where user = :1", users.get_current_user() )
-        
+
+	if units.count() == 0:
+	    unit = Unit()
+	    unit.x = 20
+	    unit.y = 20
+	    unit.user = users.get_current_user()
+	    unit.put()
+
+            units = Unit.gql("where user = :1", users.get_current_user() )
+	    
         json = {"units":[]}
         
         for unit in units:
