@@ -18,9 +18,39 @@ function getWorldPos(w,x,y){
 	return {x:(x_3d-9),y:(y_3d+37)};	
 }
 
+/* place the passed list sprites with the parameter posision and img */
 jQuery.fn.sprite = function(iso, spriteimg, heightoffset){
 	return this.each(function(){
-			$(this).css({zIndex:iso.y+heightoffset,"position": "absolute","width": tilesize + "px","height": tilesize + "px","background-image": "url('/static/img/" + spriteimg + ".gif')","left": iso.x,"top": iso.y})
+			$(this).css({
+                               zIndex:iso.y+heightoffset,
+                               "position": "absolute",
+                               "width": tilesize + "px",
+                               "height": tilesize + "px",
+                               "background-image": "url('/static/img/" + spriteimg + ".gif')",
+                               "left": iso.x,
+                                "top": iso.y})
+		});
+}
+
+/* similar to sprite but the sprite position x,y attributes are set
+   zIndex is one level below the sprite.
+ */
+jQuery.fn.underlay = function(spriteimg){
+	return this.each(function(){
+			left = $(this).css("left");
+			top = $(this).css("top");
+			zindex = $(this).css("zIndex");
+
+			$("<div class='reticle'>").appendTo("#world")
+                        .css({
+                              zIndex:zindex-1,
+                              "position": "absolute",
+                              "width": tilesize + "px",
+                              "height": tilesize + "px",
+                              "background-image": "url('/static/img/" + spriteimg + ".gif')",
+                              "left": left,
+                              "top": top
+                        })
 		});
 }
 
@@ -53,40 +83,55 @@ function placeTiles(json){
 }
 
 function placeUnits(){
-	$(".unit").remove();
-
 	$(units).each(function(i, data){
 		$.getJSON('/tile?id=' + this.id, placeTiles );
 		
 		iso = getIso(tilesize,this.x,this.y);
-		
-		$("<div class='unit'>").appendTo("#world")
-		.sprite(iso, "unit", 1) // units are above tiles 
-		.attr("id", "unit" + this.id)
+
+                tileElement =  $('#unit' + this.id);
+	
+                if (tileElement.length == 0 ){
+                    $("<div class='unit'>").appendTo("#world").attr("id", "unit" + this.id);
+                    tileElement =  $('#unit' + this.id);
+                }
+	
+		tileElement.sprite(iso, "unit", 1) // units are above tiles 
 		.attr("x", this.x)
 		.attr("y", this.y)
-		.click( function(){
-			$.getJSON("/click?id=" + this.id, function(json){
-				units = json.units;
-				placeUnits();	
-			});
+		.click( function(){
+                        // toggle unit selection
+                        if ($(this).attr("selected") == "false"){
+                                $(this).attr("selected","true");
+                        } else {
+                                $(this).attr("selected","false");
+                        }
 		});
 	});
 }
 
+function showSelectedUnits(){
+	$(".reticle").remove();
+        $(".unit[selected=true]").underlay("unitselect");
+} 
+
+function drawCursor(x,y){
+	var w = 40;
+	
+	worldpos = getWorldPos(w,x,y);
+
+	iso = getIso(tilesize,worldpos.x,worldpos.y);
+	
+	$("#cursor").sprite(iso, "cursor", 5) // cursor should be shown on top of all other sprites
+}
+
 function mouseMove(){
 	$("#world").mousemove(function(e){
-		var x = e.clientX - 10;
-		var y = e.clientY - 20;
-		var w = 40;
-		
-		worldpos = getWorldPos(w,x,y);
+		var x = e.pageX - 10;
+		var y = e.pageY - 20;
+		drawCursor(x,y);
 
-		iso = getIso(tilesize,worldpos.x,worldpos.y);
-		
-		$("#cursor").sprite(iso, "cursor", 5) // cursor should be shown on top of all other sprites
-
-	  });
+		showSelectedUnits();	
+	});
 }
 
 $(document).ready(function(){
@@ -96,7 +141,6 @@ $(document).ready(function(){
 		placeUnits();	
 	});
 
-	mouseMove();
-	
+	mouseMove();	
 });
 
