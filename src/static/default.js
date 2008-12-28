@@ -95,7 +95,7 @@ function placeTiles(json){
 
 		tiletype = "tile";
 
-		if (this.alt < 50){
+		if (this.alt < 81){
 		    tiletype = "water";
 		}
 
