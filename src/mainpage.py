@@ -47,7 +47,8 @@ class GetTiles(webapp.RequestHandler):
 
     json = {"tiles":[]}
          
-    pngfile = urlfetch.fetch(url="http://humanitymmo.appspot.com/static/earth.png").content
+    pngfile = 
+urlfetch.fetch(url="http://humanitymmo.appspot.com/static/earthmini.png").content
     
     reader = png.Reader(file=StringIO(pngfile)) # streams are also accepted
     w, h, pixels, metadata = reader.read()
