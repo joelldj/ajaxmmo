@@ -57,7 +57,7 @@ jQuery.fn.underlay = function(spriteimg){
 
 function worldClick(){
 
-	$(".tile").each(function(){
+	$(".tile").click(function(){
 		tileX = $(this).attr("x");
 		tileY = $(this).attr("y");
 
@@ -70,7 +70,7 @@ function worldClick(){
 		}
 	});
 
-	$(".unit").each(function(){	
+	$(".unit").click(function(){	
 		tileX = $(this).attr("x");
 		tileY = $(this).attr("y");
 
@@ -104,6 +104,8 @@ function placeTiles(json){
 		.attr("id", "tile" + this.x + "-" + this.y) 
 		.attr("x", this.x) // give it custom attributes for x and y
 		.attr("y", this.y);
+
+		worldClick();
 	});
 }
 
@@ -151,7 +153,7 @@ function worldMouse(){
 		drawCursor(x,y);
 	});
 
-	$("#world > *").click(worldClick);
+	//$("#world > *").click(worldClick);
 }
 
 $(document).ready(function(){
@@ -159,7 +161,8 @@ $(document).ready(function(){
 	$.getJSON('/unit', function(json){
 		units = json.units;
 		placeUnits();
-		worldMouse();	
+		worldMouse();
+		setTimeout("worldClick()",5000);
 	});
 });
 
