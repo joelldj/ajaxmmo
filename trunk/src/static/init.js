@@ -8,7 +8,7 @@ $(document).ready(function(){
 	
 		for (x=0;x<10;x++){
 			for (y=0;y<10;y++){
-				$.post('/init?x=' + x + '&y=' + y + '&height=1&type=1', function(){
+				$.post('/inittile?x=' + x + '&y=' + y + '&height=1&type=1', function(){
 					 $("<b>" + x + ":" + y + "</b> </br>").appendTo("#progress");
 				});
 			}

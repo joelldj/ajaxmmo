@@ -1,4 +1,4 @@
-application: grid
+application: humanitymmo
 version: 1
 runtime: python
 api_version: 1
@@ -9,3 +9,4 @@ handlers:
 
 - url: /.*
   script: default.py
+  login: required
