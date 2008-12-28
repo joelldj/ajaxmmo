@@ -1,5 +1,6 @@
 var xoffset = 900, yoffset = 300;
 var tilesize=40; // width and height of the tiles (formulas should be scalable, this won't be needed)
+var cursorX, cursorY;
 var units, tiles;
 
 function getIso(tilesize,x,y){
@@ -54,6 +55,36 @@ jQuery.fn.underlay = function(spriteimg){
 		});
 }
 
+function worldClick(){
+
+	$(".tile").each(function(){
+		tileX = $(this).attr("x");
+		tileY = $(this).attr("y");
+
+		if ((tileX == cursorX)&&(tileY == cursorY)){	
+			$.getJSON("/click?id=" + this.id, function(json){
+				units = json.units;
+				placeUnits();
+				showSelectedUnits();	
+			});
+		}
+	});
+
+	$(".unit").each(function(){	
+		tileX = $(this).attr("x");
+		tileY = $(this).attr("y");
+
+		if ((tileX == cursorX)&&(tileY == cursorY)){	
+			// toggle unit selection
+			if ($(this).attr("selected") == "false"){
+				$(this).attr("selected","true");
+			} else {
+				$(this).attr("selected","false");
+			}
+		}
+	});
+}
+
 function placeTiles(json){
 	var h=40, w=40;
 	
@@ -68,17 +99,11 @@ function placeTiles(json){
 		    tiletype = "water";
 		}
 
-		$("<div class='iso'>").appendTo("#world")
+		$("<div class='tile'>").appendTo("#world")
 		.sprite(iso, tiletype, 0) // tile.gif, is the lowest sprite to draw.
 		.attr("id", "tile" + this.x + "-" + this.y) 
 		.attr("x", this.x) // give it custom attributes for x and y
-		.attr("y", this.y)
-		.click( function(){
-			$.getJSON("/click?id=" + this.id, function(json){
-				units = json.units;
-				placeUnits();	
-			});
-		});
+		.attr("y", this.y);
 	});
 }
 
@@ -95,17 +120,9 @@ function placeUnits(){
                     tileElement =  $('#unit' + this.id);
                 }
 	
-		tileElement.sprite(iso, "unit", 1) // units are above tiles 
+		tileElement.sprite(iso, "unit", 2) // units are above tiles 
 		.attr("x", this.x)
-		.attr("y", this.y)
-		.click( function(){
-                        // toggle unit selection
-                        if ($(this).attr("selected") == "false"){
-                                $(this).attr("selected","true");
-                        } else {
-                                $(this).attr("selected","false");
-                        }
-		});
+		.attr("y", this.y);
 	});
 }
 
@@ -120,27 +137,29 @@ function drawCursor(x,y){
 	worldpos = getWorldPos(w,x,y);
 
 	iso = getIso(tilesize,worldpos.x,worldpos.y);
+
+	cursorX = worldpos.x;
+	cursorY = worldpos.y;
 	
-	$("#cursor").sprite(iso, "cursor", 5) // cursor should be shown on top of all other sprites
+	$("#cursor").sprite(iso, "cursor", 4); // cursor should be shown on top of all other sprites
 }
 
-function mouseMove(){
+function worldMouse(){
 	$("#world").mousemove(function(e){
 		var x = e.pageX - 10;
 		var y = e.pageY - 20;
 		drawCursor(x,y);
-
-		showSelectedUnits();	
 	});
+
+	$("#world > *").click(worldClick);
 }
 
 $(document).ready(function(){
 	
 	$.getJSON('/unit', function(json){
 		units = json.units;
-		placeUnits();	
-	});
-
-	mouseMove();	
+		placeUnits();
+		worldMouse();	
+	});
 });
 
