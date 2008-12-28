@@ -10,49 +10,4 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
-# Unused in query history -- copied from input.
-- kind: Greeting
-  properties:
-  - name: author
-  - name: date
-    direction: desc
 
-# Unused in query history -- copied from input.
-- kind: Greeting
-  properties:
-  - name: date
-    direction: desc
-
-# Unused in query history -- copied from input.
-- kind: Visit
-  properties:
-  - name: date
-    direction: desc
-
-# Unused in query history -- copied from input.
-- kind: Visit
-  properties:
-  - name: publisher
-  - name: date
-
-# Unused in query history -- copied from input.
-- kind: Visit
-  properties:
-  - name: publisher
-  - name: date
-  - name: streetname
-    direction: desc
-
-# Unused in query history -- copied from input.
-- kind: Visit
-  properties:
-  - name: publisher
-  - name: date
-    direction: desc
-
-# Unused in query history -- copied from input.
-- kind: Visit
-  properties:
-  - name: publisher
-  - name: streetname
-  - name: date

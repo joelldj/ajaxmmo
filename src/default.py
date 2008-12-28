@@ -8,6 +8,7 @@ from mainpage import MainPage
 from mainpage import GetTiles
 from mainpage import GetUnits
 from mainpage import InitUnit
+from mainpage import InitTile
 from mainpage import ClickOnTile
 
 from google.appengine.ext import db
@@ -18,7 +19,7 @@ application = webapp.WSGIApplication([
   ('/', MainPage),
   ('/tile', GetTiles),
   ('/unit', GetUnits),
-  ('/initunit', InitUnit),
+  ('/inittile', InitTile),
   ('/click', ClickOnTile)
 ], debug=False)
 
