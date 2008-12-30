@@ -2,6 +2,7 @@ var xoffset = 900, yoffset = 300;
 var tilesize=40; // width and height of the tiles (formulas should be scalable, this won't be needed)
 var cursorX, cursorY;
 var units, tiles;
+var preClickedTileID = "";
 
 function getIso(tilesize,x,y){
 	// make tiles with the back of the tile at half the width of the tile
@@ -59,22 +60,27 @@ function worldClick(){
 
 	$(".tile").mouseup(function(){
 		clickedTile = $(".tile[x="+cursorX+"][y="+cursorY+"]");
+		tileID = clickedTile.attr("id");
 
-		$.getJSON("/click?id=" + clickedTile.attr("id"), function(json){
-			units = json.units;
-			placeUnits();
-			showSelectedUnits();	
-		});
+		if (preClickedTileID != tileID){
+			preClickedTileID = tileID
+
+			$.getJSON("/click?id=" + tileID, function(json){
+				units = json.units;
+				placeUnits();
+				showSelectedUnits();	
+			});
+		}
 	});
 
 	$(".unit").mouseup(function(){	
-		clickedTile = $(".unit[x="+cursorX+"][y="+cursorY+"]");
+		clickedUnit = $(".unit[x="+cursorX+"][y="+cursorY+"]");
 
 		// toggle unit selection
-		if (clickedTile.attr("selected") == "false"){
-			clickedTile.attr("selected","true");
+		if (clickedUnit.attr("selected") == "false"){
+			clickedUnit.attr("selected","true");
 		} else {
-			clickedTile.attr("selected","false");
+			clickedUnit.attr("selected","false");
 		}
 	});
 }
