@@ -57,7 +57,7 @@ jQuery.fn.underlay = function(spriteimg){
 
 function worldClick(){
 
-	$(".tile").click(function(){
+	$(".tile").mouseup(function(){
 		clickedTile = $(".tile[x="+cursorX+"][y="+cursorY+"]");
 
 		$.getJSON("/click?id=" + clickedTile.attr("id"), function(json){
@@ -67,7 +67,7 @@ function worldClick(){
 		});
 	});
 
-	$(".unit").click(function(){	
+	$(".unit").mouseup(function(){	
 		clickedTile = $(".unit[x="+cursorX+"][y="+cursorY+"]");
 
 		// toggle unit selection
