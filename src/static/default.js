@@ -58,29 +58,23 @@ jQuery.fn.underlay = function(spriteimg){
 function worldClick(){
 
 	$(".tile").click(function(){
-		tileX = $(this).attr("x");
-		tileY = $(this).attr("y");
+		clickedTile = $(".tile[x="+cursorX+"][y="+cursorY+"]");
 
-		if ((tileX == cursorX)&&(tileY == cursorY)){	
-			$.getJSON("/click?id=" + this.id, function(json){
-				units = json.units;
-				placeUnits();
-				showSelectedUnits();	
-			});
-		}
+		$.getJSON("/click?id=" + clickedTile.id, function(json){
+			units = json.units;
+			placeUnits();
+			showSelectedUnits();	
+		});
 	});
 
 	$(".unit").click(function(){	
-		tileX = $(this).attr("x");
-		tileY = $(this).attr("y");
+		clickedTile = $(".unit[x="+cursorX+"][y="+cursorY+"]");
 
-		if ((tileX == cursorX)&&(tileY == cursorY)){	
-			// toggle unit selection
-			if ($(this).attr("selected") == "false"){
-				$(this).attr("selected","true");
-			} else {
-				$(this).attr("selected","false");
-			}
+		// toggle unit selection
+		if (clickedTile.attr("selected") == "false"){
+			clickedTile.attr("selected","true");
+		} else {
+			clickedTile.attr("selected","false");
 		}
 	});
 }
@@ -105,7 +99,7 @@ function placeTiles(json){
 		.attr("x", this.x) // give it custom attributes for x and y
 		.attr("y", this.y);
 
-		worldClick();
+		setTimeout("worldClick()",100);
 	});
 }
 
@@ -162,7 +156,7 @@ $(document).ready(function(){
 		units = json.units;
 		placeUnits();
 		worldMouse();
-		setTimeout("worldClick()",5000);
+		setTimeout("worldClick()",500);
 	});
 });
 
