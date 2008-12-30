@@ -60,7 +60,7 @@ function worldClick(){
 	$(".tile").click(function(){
 		clickedTile = $(".tile[x="+cursorX+"][y="+cursorY+"]");
 
-		$.getJSON("/click?id=" + clickedTile.id, function(json){
+		$.getJSON("/click?id=" + clickedTile.attr("id"), function(json){
 			units = json.units;
 			placeUnits();
 			showSelectedUnits();	
