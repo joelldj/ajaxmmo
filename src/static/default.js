@@ -2,7 +2,7 @@ var xoffset = 900, yoffset = 300;
 var tilesize=40; // width and height of the tiles (formulas should be scalable, this won't be needed)
 var cursorX, cursorY;
 var units, tiles;
-var preClickedTileID = "";
+var runOnce = 0;
 
 function getIso(tilesize,x,y){
 	// make tiles with the back of the tile at half the width of the tile
@@ -30,7 +30,7 @@ jQuery.fn.sprite = function(iso, spriteimg, heightoffset){
                                "height": tilesize + "px",
                                "background-image": "url('/static/img/" + spriteimg + ".gif')",
                                "left": iso.x,
-                                "top": iso.y})
+                                "top": iso.y});
 		});
 }
 
@@ -56,32 +56,42 @@ jQuery.fn.underlay = function(spriteimg){
 		});
 }
 
+function resetClick(){
+	runOnce = 0;
+	showSelectedUnits();
+}
+
 function worldClick(){
 
 	$(".tile").mouseup(function(){
 		clickedTile = $(".tile[x="+cursorX+"][y="+cursorY+"]");
-		tileID = clickedTile.attr("id");
 
-		if (preClickedTileID != tileID){
-			preClickedTileID = tileID
+		if (runOnce == 0){
+			runOnce++;
 
-			$.getJSON("/click?id=" + tileID, function(json){
-				units = json.units;
-				placeUnits();
-				showSelectedUnits();	
+			$(".unit[selected=true]").each( function(){
+				unitid = $(this).attr("id");
+
+				$.getJSON("/click?id=" + clickedTile.attr("id"), function(json){
+					units = json.units;
+					placeUnits();
+					showSelectedUnits();	
+				});
 			});
-		}
-	});
 
-	$(".unit").mouseup(function(){	
-		clickedUnit = $(".unit[x="+cursorX+"][y="+cursorY+"]");
+			clickedUnit = $(".unit[x="+cursorX+"][y="+cursorY+"]");
 
-		// toggle unit selection
-		if (clickedUnit.attr("selected") == "false"){
-			clickedUnit.attr("selected","true");
-		} else {
-			clickedUnit.attr("selected","false");
+			if (clickedUnit.length > 0){
+				// toggle unit selection
+				if (clickedUnit.attr("selected") == "false"){
+					clickedUnit.attr("selected","true");
+				} else {
+					clickedUnit.attr("selected","false");
+				}
+			}
+			setTimeout("resetClick()", 500);
 		}
+
 	});
 }
 
@@ -117,12 +127,12 @@ function placeUnits(){
 
                 tileElement =  $('#unit' + this.id);
 	
-                if (tileElement.length == 0 ){
+                if (tileElement.length === 0 ){
                     $("<div class='unit'>").appendTo("#world").attr("id", "unit" + this.id);
                     tileElement =  $('#unit' + this.id);
                 }
 	
-		tileElement.sprite(iso, "unit", 2) // units are above tiles 
+		tileElement.sprite(iso, "unit", 3) // units are above tiles 
 		.attr("x", this.x)
 		.attr("y", this.y);
 	});
@@ -143,7 +153,7 @@ function drawCursor(x,y){
 	cursorX = worldpos.x;
 	cursorY = worldpos.y;
 	
-	$("#cursor").sprite(iso, "cursor", 4); // cursor should be shown on top of all other sprites
+	$("#cursor").sprite(iso, "cursor", 1); // cursor should be shown on top of all other sprites
 }
 
 function worldMouse(){
@@ -152,8 +162,6 @@ function worldMouse(){
 		var y = e.pageY - 20;
 		drawCursor(x,y);
 	});
-
-	//$("#world > *").click(worldClick);
 }
 
 $(document).ready(function(){
