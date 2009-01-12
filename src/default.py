@@ -10,6 +10,7 @@ from mainpage import GetUnits
 from mainpage import InitUnit
 from mainpage import InitTile
 from mainpage import ClickOnTile
+from mainpage import UnitMessages
 
 from google.appengine.ext import db
 from google.appengine.api import users
@@ -20,7 +21,8 @@ application = webapp.WSGIApplication([
   ('/tile', GetTiles),
   ('/unit', GetUnits),
   ('/inittile', InitTile),
-  ('/click', ClickOnTile)
+  ('/click', ClickOnTile),
+  ('/chat', UnitMessages)
 ], debug=False)
 
 

@@ -3,6 +3,7 @@ import re
 
 from models import Tile
 from models import Unit
+from models import Message
 
 from google.appengine.ext import db
 from google.appengine.api import users
@@ -27,7 +28,7 @@ class MainPage(webapp.RequestHandler):
     head = head + """<script src="/static/default.js" type="text/javascript"></script>"""
     head = head + """<link href="/static/default.css" rel="stylesheet" type="text/css" />"""
     head = head + """<link href="/static/tiles.css" rel="stylesheet" type="text/css" />"""
-    head = head + """</head><body><div id="world" style="position:relative" > <span id="cursor" /> </div>"""
+    head = head + """</head><body><div id="world" style="position:relative" > <span id="cursor" /> </div> <div id="chatroom" />"""
     
     self.response.out.write(head)
     
@@ -125,10 +126,6 @@ class ClickOnTile(webapp.RequestHandler):
     clicked_x = int(xy[0])
     clicked_y = int(xy[1])
     
-    # if a unit is clicked then select it
-    # set the current unit to memcache, or pass json to this every time with the list of unit id's and which tile is clicked.
-    # http://code.google.com/appengine/docs/memcache/usingmemcache.html
-    
     units = Unit.gql("where user = :1", users.get_current_user() )
     
     #move units
@@ -150,13 +147,33 @@ class ClickOnTile(webapp.RequestHandler):
     units = Unit.gql("where user = :1", users.get_current_user() )    
     
     
-    # send units back to the front end.
+    # send units back to the client.
     json = {"units":[]}
     
     for unit in units:
         json["units"].append( {"x":unit.x, "y":unit.y, "id":unit.key().id() } )
         
     self.response.out.write(demjson.encode(json))
+
+""" This will handle both the post (for writing messages) and get (for reading messages) """
+class UnitMessages(webapp.RequestHandler):
+    def get(self):
+        # http://code.google.com/appengine/docs/memcache/usingmemcache.html
+        """ fill memcache with the last 10 messages """
+        
+        """ return the oldest unread message from memcache """
+        # return msg, to, from, time in json format
+        
+        """ mark the message as read """
+        
+    def post(self):
+        req = self.request
+        
+        msg = Message()
+        msg.text = req("text")
+        msg.unitfrom = Unit.get_by_id(req("fromid"))
+        msg.unitto = Unit.get_by_id(req("toid"))
+        msg.put()
 
     
 class MenuAction(webapp.RequestHandler):

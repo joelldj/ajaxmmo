@@ -164,6 +164,25 @@ function worldMouse(){
 	});
 }
 
+function gameChatPoll(){
+	// getJson of latest message /chat every x millseconds
+	$.getJSON("/chat", function(json){
+		msg = json.msg;
+		$("#chatRoom").appendTo( msg.time + " " + msg.from + "says: " + msg.text + " to: " + msg.to);
+	});
+
+	setTimeout("gameChatPoll()",5000); 
+}
+
+function messageSendBoxEvent(){
+	$("#msgbox").keypress(function (e) {
+		if (e.which == 13){
+			$("#msgbox").html("");
+			//$.post("/chat") // post message to the chat server
+		}
+	})
+}
+
 $(document).ready(function(){
 	
 	$.getJSON('/unit', function(json){
