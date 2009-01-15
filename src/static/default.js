@@ -177,8 +177,11 @@ function gameChatPoll(){
 function messageSendBoxEvent(){
 	$("#msgbox").keypress(function (e) {
 		if (e.which == 13){
+			msg = $("#msgbox").val;
 			$("#msgbox").html("");
 			//$.post("/chat") // post message to the chat server
+			unitid = $(".unit[selected=true] :first").attr("id");
+			$.post("/chat", { from: unitid, to:0, text:msg } ); 			
 		}
 	})
 }
