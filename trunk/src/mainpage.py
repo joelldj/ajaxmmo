@@ -28,7 +28,7 @@ class MainPage(webapp.RequestHandler):
     head = head + """<script src="/static/default.js" type="text/javascript"></script>"""
     head = head + """<link href="/static/default.css" rel="stylesheet" type="text/css" />"""
     head = head + """<link href="/static/tiles.css" rel="stylesheet" type="text/css" />"""
-    head = head + """</head><body><div id="world" style="position:relative" > <span id="cursor" /> </div> <div id="chatroom" />"""
+    head = head + """</head><body><div id="world" style="position:relative" > <span id="cursor" /> </div> <div id="chatroom" /> <input type=text id="msgbox" />"""
     
     self.response.out.write(head)
     
