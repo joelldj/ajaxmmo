@@ -1,0 +1,3 @@
+data = Messages.gql()
+
+memcache.add("messages", data, 60)
