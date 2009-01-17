@@ -11,10 +11,10 @@ class Unit(db.Model):
     x = db.IntegerProperty()
     y = db.IntegerProperty()
     user = db.UserProperty()
-    
-class Message(db.Model):
+
+class ChatMessage(db.Model):
     text = db.StringProperty()
-    unitfrom = db.ReferenceProperty(Unit)
-    unitto = db.ReferenceProperty(unit)
+    unitfrom = db.ReferenceProperty(Unit, required=True, collection_name="unitfrom")
+    unitto = db.ReferenceProperty(Unit, required=False, collection_name="unitto")
     messagetime = db.DateTimeProperty(auto_now=True)
     
