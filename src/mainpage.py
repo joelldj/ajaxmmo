@@ -3,7 +3,7 @@ import re
 
 from models import Tile
 from models import Unit
-from models import Message
+from models import ChatMessage
 
 from google.appengine.ext import db
 from google.appengine.api import users
@@ -169,7 +169,7 @@ class UnitMessages(webapp.RequestHandler):
     def post(self):
         req = self.request
         
-        msg = Message()
+        msg = ChatMessage()
         msg.text = req("text")
         msg.unitfrom = Unit.get_by_id(req("fromid"))
         msg.unitto = Unit.get_by_id(req("toid"))
