@@ -174,7 +174,7 @@ function gameChatPoll(){
 	setTimeout("gameChatPoll()",5000); 
 }
 
-function messageSendBoxEvent(){
+function chatKeyboardEvents(){
 	$("#msgbox").keypress(function (e) {
 		if (e.which == 13){
 			msg = $("#msgbox").val;
@@ -193,6 +193,7 @@ $(document).ready(function(){
 		placeUnits();
 		worldMouse();
 		setTimeout("worldClick()",500);
+		setTimeout("chatKeyboardEvents()",500);
 	});
 });
 
