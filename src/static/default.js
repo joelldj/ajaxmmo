@@ -177,8 +177,8 @@ function gameChatPoll(){
 function chatKeyboardEvents(){
 	$("#msgbox").keypress(function (e) {
 		if (e.which == 13){
-			msg = $("#msgbox").value;
-			$("#msgbox").value("");
+			var msg = $("#msgbox")[0].value;
+			$("#msgbox")[0].value = "";
 			//$.post("/chat") // post message to the chat server
 			unitid = $(".unit[selected=true] :first").attr("id");
 			$.post("/chat", { from: unitid, to:0, text:msg } ); 			
