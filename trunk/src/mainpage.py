@@ -3,7 +3,6 @@ import re
 
 from models import Tile
 from models import Unit
-from models import ChatMessage
 
 from google.appengine.ext import db
 from google.appengine.api import users
@@ -154,26 +153,6 @@ class ClickOnTile(webapp.RequestHandler):
         json["units"].append( {"x":unit.x, "y":unit.y, "id":unit.key().id() } )
         
     self.response.out.write(demjson.encode(json))
-
-""" This will handle both the post (for writing messages) and get (for reading messages) """
-class UnitMessages(webapp.RequestHandler):
-    def get(self):
-        # http://code.google.com/appengine/docs/memcache/usingmemcache.html
-        """ fill memcache with the last 10 messages """
-        
-        """ return the oldest unread message from memcache """
-        # return msg, to, from, time in json format
-        
-        """ mark the message as read """
-        
-    def post(self):
-        req = self.request
-        
-        msg = ChatMessage()
-        msg.text = req("text")
-        msg.unitfrom = Unit.get_by_id(req("fromid"))
-        msg.unitto = Unit.get_by_id(req("toid"))
-        msg.put()
 
     
 class MenuAction(webapp.RequestHandler):

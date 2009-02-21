@@ -10,7 +10,8 @@ from mainpage import GetUnits
 from mainpage import InitUnit
 from mainpage import InitTile
 from mainpage import ClickOnTile
-from mainpage import UnitMessages
+
+from chat import UnitMessages
 
 from google.appengine.ext import db
 from google.appengine.api import users
