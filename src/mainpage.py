@@ -10,6 +10,7 @@ from google.appengine.ext import webapp
 
 from google.appengine.api import images
 from google.appengine.api import urlfetch
+from google.appengine.api import memcache
 
 from StringIO import StringIO
 
@@ -18,6 +19,28 @@ import png
 import os
 
 import demjson
+
+def FetchImage(filename):
+    pngfile = urlfetch.fetch(url=filename).content
+    
+    reader = png.Reader(file=StringIO(pngfile)) # streams are also accepted
+    w, h, pixels, metadata = reader.read()
+    pixel_byte_width =  4 if metadata['has_alpha'] else 3
+
+    return [w, h, pixels, pixel_byte_width] 
+
+def GetHeightAt(x,y,ImageData):
+
+    w,h,pixels, pixel_byte_width = ImageData
+
+    pixel_position = (y * w) + x
+    
+    pixel = pixels[
+      pixel_position * pixel_byte_width :
+      (pixel_position + 1) * pixel_byte_width]
+    
+    return pixel[1]
+
 
 
 class MainPage(webapp.RequestHandler):
@@ -40,19 +63,17 @@ class MainPage(webapp.RequestHandler):
 class GetTiles(webapp.RequestHandler):
   def get(self):
 
+    map = memcache.get("map")
+    ImageData = FetchImage("http://humanitymmo.appspot.com/static/earthmini.png")
+    w,h = ImageData[:2]
+
     # should get the tiles, within proximity of units.
     # foreach unit, get tiles within range of the unit
     # in this instance limit it to 1 unit only
     unit = Unit.get_by_id( int(self.request.get("id")) )
 
-    json = {"tiles":[]}
-         
-    pngfile = urlfetch.fetch(url="http://humanitymmo.appspot.com/static/earthmini.png").content
-    
-    reader = png.Reader(file=StringIO(pngfile)) # streams are also accepted
-    w, h, pixels, metadata = reader.read()
-    pixel_byte_width =  4 if metadata['has_alpha'] else 3
-    
+    json = {"tiles":[]}        
+
     fov =  2 # fov is how many tiles a unit can see around it
     xleft = max(unit.x - fov, 0)
     xright = min(unit.x + fov + 1, w)
@@ -62,13 +83,7 @@ class GetTiles(webapp.RequestHandler):
     for x in range(xleft, xright):
         for y in range(ytop, ybottom):
             
-            pixel_position = (y * w) + x
-            
-            pixel = pixels[
-              pixel_position * pixel_byte_width :
-              (pixel_position + 1) * pixel_byte_width]
-            
-            alt = pixel[1]
+	    alt = GetHeightAt(x,y,ImageData)
                             
             json["tiles"].append( {"x":x, "y":y, "alt":alt } )
             
