@@ -9,3 +9,8 @@ width:32px;
 height:32px;
 font-size: 10px;
 }
+#world {
+position: absolute;
+left:0px;
+top:0px;
+}
