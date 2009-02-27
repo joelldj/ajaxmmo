@@ -1,4 +1,4 @@
-var xoffset = 900, yoffset = 300;
+var xoffset = 850, yoffset = -150;
 var tilesize=40; // width and height of the tiles (formulas should be scalable, this won't be needed)
 var cursorX, cursorY;
 var units, tiles;
@@ -17,7 +17,8 @@ function getWorldPos(w,x,y){
 	var y_3d = Math.round( ((w*y) - (h*x)) / (w*h) );
 	var x_3d = Math.round( ((w*y) + (h*x)) / (w*h) );
 	
-	return {x:(x_3d-9),y:(y_3d+37)};	
+	//return {x:(x_3d-15),y:(y_3d+28)};
+        return {x:(x_3d-1),y:(y_3d)};	
 }
 
 /* place the passed list sprites with the parameter posision and img */
@@ -146,7 +147,7 @@ function showSelectedUnits(){
 function drawCursor(x,y){
 	var w = 40;
 	
-	worldpos = getWorldPos(w,x,y);
+	worldpos = getWorldPos(w,x-xoffset,y+yoffset);
 
 	iso = getIso(tilesize,worldpos.x,worldpos.y);
 
@@ -194,6 +195,7 @@ $(document).ready(function(){
 		worldMouse();
 		setTimeout("worldClick()",500);
 		setTimeout("chatKeyboardEvents()",500);
-	});
+	});
+
 });
 
