@@ -67,6 +67,8 @@ function worldClick(){
 	$(".tile").mouseup(function(){
 		clickedTile = $(".tile[x="+cursorX+"][y="+cursorY+"]");
 
+
+		// clicks that post back should be on a timer
 		if (runOnce == 0){
 			runOnce++;
 
@@ -80,17 +82,20 @@ function worldClick(){
 				});
 			});
 
-			clickedUnit = $(".unit[x="+cursorX+"][y="+cursorY+"]");
+			setTimeout("resetClick()", 250);
+		}
 
-			if (clickedUnit.length > 0){
-				// toggle unit selection
-				if (clickedUnit.attr("selected") == "false"){
-					clickedUnit.attr("selected","true");
-				} else {
-					clickedUnit.attr("selected","false");
-				}
+
+		// gui only clicks not to be time limited.
+		clickedUnit = $(".unit[x="+cursorX+"][y="+cursorY+"]");
+
+		if (clickedUnit.length > 0){
+			// toggle unit selection
+			if (clickedUnit.attr("selected") == "false"){
+				clickedUnit.attr("selected","true");
+			} else {
+				clickedUnit.attr("selected","false");
 			}
-			setTimeout("resetClick()", 500);
 		}
 
 	});
@@ -110,11 +115,19 @@ function placeTiles(json){
 		    tiletype = "water";
 		}
 
-		$("<div class='tile'>").appendTo("#world")
-		.sprite(iso, tiletype, 0) // tile.gif, is the lowest sprite to draw.
-		.attr("id", "tile" + this.x + "-" + this.y) 
-		.attr("x", this.x) // give it custom attributes for x and y
-		.attr("y", this.y);
+		// add tile existence checking like for unit checking.	
+                tileElement =  $('#tile' + this.x + "-" + this.y);
+	
+                if (tileElement.length === 0 ){
+			$("<div class='tile'>").appendTo("#world")
+			.sprite(iso, tiletype, 0) // tile.gif, is the lowest sprite to draw.
+			.attr("id", "tile" + this.x + "-" + this.y) 
+			.attr("x", this.x) // give it custom attributes for x and y
+			.attr("y", this.y);
+                }
+
+
+
 
 		setTimeout("worldClick()",100);
 	});
