@@ -57,6 +57,33 @@ jQuery.fn.underlay = function(spriteimg){
 		});
 }
 
+jQuery.fn.label = function(text){
+	return this.each(function(){
+			left = $(this).css("left");
+			top = $(this).css("top");
+			zindex = $(this).css("zIndex");
+			labelid = "#label" + $(this).attr("id");
+
+		        labelElement =  $(labelid);
+	
+		        if (labelElement.length === 0 ){
+
+				$("<a>").appendTo("#world").attr("id", "label" + $(this).attr("id"))
+
+				labelElement =  $(labelid);
+			}
+
+			labelElement.css({
+		                      zIndex:zindex+1,
+		                      "position": "absolute",
+		                      "left": left,
+		                      "top": top
+		                }).html(text);
+
+		});
+}
+
+
 function resetClick(){
 	runOnce = 0;
 	showSelectedUnits();
@@ -147,6 +174,7 @@ function placeUnits(){
                 }
 	
 		tileElement.sprite(iso, "unit", 3) // units are above tiles 
+		.label("unit") 
 		.attr("x", this.x)
 		.attr("y", this.y);
 	});
