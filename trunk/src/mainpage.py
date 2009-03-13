@@ -84,14 +84,16 @@ class GetTiles(webapp.RequestHandler):
         for y in range(ytop, ybottom):
             
 	    alt = GetHeightAt(x,y,ImageData)
-                            
+        
             json["tiles"].append( {"x":x, "y":y, "alt":alt } )
+		
+	    enemyunits = Unit.gql("where x = :1 and y = :2", x, y)
+		
+	    for enemyunit in enemyunits:
+                if enemyunit.user.nickname() != users.get_current_user().nickname():
+                    json["enemyunits"].append( {"x":x, "y":y, "id":enemyunit.key().id(), "owner":enemyunit.user.nickname() } )
+
 			
-			enemyunits = Unit.gql("where x = :1 and x = :2", x, y )
-			for enemyunit in enemyunits:
-				json["enemyunits"].append( {"x":enemyunit.x, "y":enemyunit.y, "id":enemyunit.key().id(), "owner":enemyunit.user } )
-			
-            
     self.response.out.write(demjson.encode(json))
 
 class GetUnits(webapp.RequestHandler):
@@ -110,11 +112,11 @@ class GetUnits(webapp.RequestHandler):
         json = {"units":[]}
         
         for unit in units:
-            json["units"].append( {"x":unit.x, "y":unit.y, "id":unit.key().id(), "owner":unit.user } )
+            json["units"].append( {"x":unit.x, "y":unit.y, "id":unit.key().id(), "owner":unit.user.nickname() } )
             
         self.response.out.write(demjson.encode(json))
-            
-    
+
+
 class InitTile(webapp.RequestHandler):
   def post(self):
     tile = Tile()
