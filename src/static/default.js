@@ -1,7 +1,6 @@
 var xoffset = 850, yoffset = -150;
 var tilesize=40; // width and height of the tiles (formulas should be scalable, this won't be needed)
 var cursorX, cursorY;
-var units;
 var runOnce = 0;
 
 function getIso(tilesize,x,y){
@@ -104,7 +103,7 @@ function worldClick(){
 
 				$.getJSON("/click?id=" + clickedTile.attr("id"), function(json){
 					//units = json.units;
-					placeUnits(json);
+					placeUnits(json,"unit");
 					showSelectedUnits();	
 				});
 			});
@@ -153,24 +152,39 @@ function placeTiles(json){
 			.attr("y", this.y);
         }
 		
+		// place enemy units on screen.
+		placeUnits(json,"enemy");
+		
 		setTimeout("worldClick()",100);
 	});
 }
 
-function placeUnits(json){
-	$(json.units).each(function(i, data){
-		$.getJSON('/tile?id=' + this.id, placeTiles );
-		
+function placeUnits(json,unitfaction){
+	var unitfaction;
+
+	if (unitfaction == "unit"){
+		units = json.units;
+	} else {
+		units = json.enemyunits;
+	}
+
+
+	$(units).each(function(i, data){
+	
+		if (unitfaction == "unit"){
+			$.getJSON('/tile?id=' + this.id, placeTiles );
+		}
+	
 		iso = getIso(tilesize,this.x,this.y);
-
+			
 		tileElement =  $('#unit' + this.id);
-
-		if (tileElement.length === 0 ){
-			$("<div class='unit'>").appendTo("#world").attr("id", "unit" + this.id);
+		
+		if (tileElement.length === 0 ){			
+			$("<div class='" + unitfaction + "'>").appendTo("#world").attr("id", "unit" + this.id);
 			tileElement =  $('#unit' + this.id);
 		}
 	
-		tileElement.sprite(iso, "unit", 3) // units are above tiles 
+		tileElement.sprite(iso, unitfaction, 3) // units are above tiles 
 		.label(this.owner) 
 		.attr("x", this.x)
 		.attr("y", this.y);
@@ -228,8 +242,8 @@ function chatKeyboardEvents(){
 $(document).ready(function(){
 	
 	$.getJSON('/unit', function(json){
-		units = json.units;
-		placeUnits();
+		//units = json.units;
+		placeUnits(json,"unit");
 		worldMouse();
 		setTimeout("worldClick()",500);
 		setTimeout("chatKeyboardEvents()",500);
