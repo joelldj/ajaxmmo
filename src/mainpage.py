@@ -72,7 +72,7 @@ class GetTiles(webapp.RequestHandler):
     # in this instance limit it to 1 unit only
     unit = Unit.get_by_id( int(self.request.get("id")) )
 
-    json = {"tiles":[]}        
+    json = {"tiles":[],"enemyunits":[]}        
 
     fov =  2 # fov is how many tiles a unit can see around it
     xleft = max(unit.x - fov, 0)
@@ -86,6 +86,11 @@ class GetTiles(webapp.RequestHandler):
 	    alt = GetHeightAt(x,y,ImageData)
                             
             json["tiles"].append( {"x":x, "y":y, "alt":alt } )
+			
+			enemyunits = Unit.gql("where x = :1 and x = :2", x, y )
+			for enemyunit in enemyunits:
+				json["enemyunits"].append( {"x":enemyunit.x, "y":enemyunit.y, "id":enemyunit.key().id(), "owner":enemyunit.user } )
+			
             
     self.response.out.write(demjson.encode(json))
 
@@ -100,12 +105,12 @@ class GetUnits(webapp.RequestHandler):
 	    unit.user = users.get_current_user()
 	    unit.put()
 
-            units = Unit.gql("where user = :1", users.get_current_user() )
+        units = Unit.gql("where user = :1", users.get_current_user() )
 	    
         json = {"units":[]}
         
         for unit in units:
-            json["units"].append( {"x":unit.x, "y":unit.y, "id":unit.key().id() } )
+            json["units"].append( {"x":unit.x, "y":unit.y, "id":unit.key().id(), "owner":unit.user } )
             
         self.response.out.write(demjson.encode(json))
             

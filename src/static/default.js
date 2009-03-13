@@ -1,7 +1,7 @@
 var xoffset = 850, yoffset = -150;
 var tilesize=40; // width and height of the tiles (formulas should be scalable, this won't be needed)
 var cursorX, cursorY;
-var units, tiles;
+var units;
 var runOnce = 0;
 
 function getIso(tilesize,x,y){
@@ -103,8 +103,8 @@ function worldClick(){
 				unitid = $(this).attr("id");
 
 				$.getJSON("/click?id=" + clickedTile.attr("id"), function(json){
-					units = json.units;
-					placeUnits();
+					//units = json.units;
+					placeUnits(json);
 					showSelectedUnits();	
 				});
 			});
@@ -143,38 +143,35 @@ function placeTiles(json){
 		}
 
 		// add tile existence checking like for unit checking.	
-                tileElement =  $('#tile' + this.x + "-" + this.y);
+        tileElement =  $('#tile' + this.x + "-" + this.y);
 	
-                if (tileElement.length === 0 ){
+        if (tileElement.length === 0 ){
 			$("<div class='tile'>").appendTo("#world")
 			.sprite(iso, tiletype, 0) // tile.gif, is the lowest sprite to draw.
 			.attr("id", "tile" + this.x + "-" + this.y) 
 			.attr("x", this.x) // give it custom attributes for x and y
 			.attr("y", this.y);
-                }
-
-
-
-
+        }
+		
 		setTimeout("worldClick()",100);
 	});
 }
 
-function placeUnits(){
-	$(units).each(function(i, data){
+function placeUnits(json){
+	$(json.units).each(function(i, data){
 		$.getJSON('/tile?id=' + this.id, placeTiles );
 		
 		iso = getIso(tilesize,this.x,this.y);
 
-                tileElement =  $('#unit' + this.id);
-	
-                if (tileElement.length === 0 ){
-                    $("<div class='unit'>").appendTo("#world").attr("id", "unit" + this.id);
-                    tileElement =  $('#unit' + this.id);
-                }
+		tileElement =  $('#unit' + this.id);
+
+		if (tileElement.length === 0 ){
+			$("<div class='unit'>").appendTo("#world").attr("id", "unit" + this.id);
+			tileElement =  $('#unit' + this.id);
+		}
 	
 		tileElement.sprite(iso, "unit", 3) // units are above tiles 
-		.label("unit") 
+		.label(this.owner) 
 		.attr("x", this.x)
 		.attr("y", this.y);
 	});
