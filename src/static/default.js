@@ -1,7 +1,37 @@
+/*
+The MIT License
+
+Copyright (c) 2008-2009 Joseph Le Brech
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+
 var xoffset = 850, yoffset = -150;
 var tilesize=40; // width and height of the tiles (formulas should be scalable, this won't be needed)
 var cursorX, cursorY;
 var runOnce = 0;
+
+
+/*** 
+   ** ENGINE API STUFF
+   ***/
+
 
 function getIso(tilesize,x,y){
 	// make tiles with the back of the tile at half the width of the tile
@@ -16,8 +46,7 @@ function getWorldPos(w,x,y){
 	var y_3d = Math.round( ((w*y) - (h*x)) / (w*h) );
 	var x_3d = Math.round( ((w*y) + (h*x)) / (w*h) );
 	
-	//return {x:(x_3d-15),y:(y_3d+28)};
-        return {x:(x_3d-1),y:(y_3d)};	
+  return {x:(x_3d-1),y:(y_3d)};	
 }
 
 /* place the passed list sprites with the parameter posision and img */
@@ -34,16 +63,14 @@ jQuery.fn.sprite = function(iso, spriteimg, heightoffset){
 		});
 }
 
-/* similar to sprite but the sprite position x,y attributes are set
-   zIndex is one level below the sprite.
- */
-jQuery.fn.underlay = function(spriteimg){
+/* similar to sprite but the sprite position x,y attributes are set zIndex is one level below the sprite. */
+jQuery.fn.underlay = function(spriteimg, classname){
 	return this.each(function(){
 			left = $(this).css("left");
 			top = $(this).css("top");
 			zindex = $(this).css("zIndex");
 
-			$("<div class='reticle'>").appendTo("#world")
+			$("<div class='" + classname + "'>").appendTo("#world")
                         .css({
                               zIndex:zindex-1,
                               "position": "absolute",
@@ -56,6 +83,7 @@ jQuery.fn.underlay = function(spriteimg){
 		});
 }
 
+/* Place a peice of text just next to the chained element */
 jQuery.fn.label = function(text){
 	return this.each(function(){
 			left = $(this).css("left");
@@ -82,37 +110,35 @@ jQuery.fn.label = function(text){
 		});
 }
 
+/*** 
+   ** GAME CODE
+   ***/
 
-function resetClick(){
-	runOnce = 0;
-	showSelectedUnits();
+function gameCycle(){
+  // each moving unit should be posted to the server for updates
+  $(".unit[selected=true]").each( function(){
+    unitid = $(this).attr("id");
+
+    // maybe use post later :)
+    $.getJSON("/click?id=" + clickedTile.attr("id") + "&x-goto=" + clickedTile.attr("x-goto") + "&y-goto=" + clickedTile.attr("y-goto"), function(json){
+      //units = json.units;
+      placeUnits(json,"unit");
+      showSelectedUnits();	
+    });
+  });
+
+  setTimeout("gameCycle()", 2000);
 }
 
-function worldClick(){
+function selectedUnitsGoto(x,y){
+  $(".unit[selected=true]").each(function(){
+    $(this).attr("x-goto", x);
+    $(this).attr("y-goto", y);
+    $(this).underlay("goto", "goto");
+  });
+}
 
-	$(".tile").mouseup(function(){
-		clickedTile = $(".tile[x="+cursorX+"][y="+cursorY+"]");
-
-
-		// clicks that post back should be on a timer
-		if (runOnce == 0){
-			runOnce++;
-
-			$(".unit[selected=true]").each( function(){
-				unitid = $(this).attr("id");
-
-				$.getJSON("/click?id=" + clickedTile.attr("id"), function(json){
-					//units = json.units;
-					placeUnits(json,"unit");
-					showSelectedUnits();	
-				});
-			});
-
-			setTimeout("resetClick()", 250);
-		}
-
-
-		// gui only clicks not to be time limited.
+function selectClickedUnit(){
 		clickedUnit = $(".unit[x="+cursorX+"][y="+cursorY+"]");
 
 		if (clickedUnit.length > 0){
@@ -123,7 +149,12 @@ function worldClick(){
 				clickedUnit.attr("selected","false");
 			}
 		}
+}
 
+function worldClick(){
+	$(".tile").live("mouseup",function(){
+    selectedUnitsGoto(cursorX, cursorY);
+    selectClickedUnit();
 	});
 }
 
@@ -142,20 +173,18 @@ function placeTiles(json){
 		}
 
 		// add tile existence checking like for unit checking.	
-        tileElement =  $('#tile' + this.x + "-" + this.y);
+    tileElement =  $('#tile' + this.x + "-" + this.y);
 	
-        if (tileElement.length === 0 ){
+    if (tileElement.length === 0 ){
 			$("<div class='tile'>").appendTo("#world")
 			.sprite(iso, tiletype, 0) // tile.gif, is the lowest sprite to draw.
 			.attr("id", "tile" + this.x + "-" + this.y) 
 			.attr("x", this.x) // give it custom attributes for x and y
 			.attr("y", this.y);
-        }
+    }
 		
 		// place enemy units on screen.
 		placeUnits(json,"enemy");
-		
-		setTimeout("worldClick()",100);
 	});
 }
 
@@ -168,9 +197,7 @@ function placeUnits(json,unitfaction){
 		units = json.enemyunits;
 	}
 
-
 	$(units).each(function(i, data){
-	
 		if (unitfaction == "unit"){
 			$.getJSON('/tile?id=' + this.id, placeTiles );
 		}
@@ -193,7 +220,7 @@ function placeUnits(json,unitfaction){
 
 function showSelectedUnits(){
 	$(".reticle").remove();
-        $(".unit[selected=true]").underlay("unitselect");
+  $(".unit[selected=true]").underlay("unitselect", "reticle");
 } 
 
 function drawCursor(x,y){
@@ -217,6 +244,10 @@ function worldMouse(){
 	});
 }
 
+/***
+   ** Chat
+   ***/
+
 function gameChatPoll(){
 	// getJson of latest message /chat every x millseconds
 	$.getJSON("/chat", function(json){
@@ -239,15 +270,18 @@ function chatKeyboardEvents(){
 	})
 }
 
+/***
+  ** Initialize
+  ***/
+
 $(document).ready(function(){
-	
 	$.getJSON('/unit', function(json){
 		//units = json.units;
 		placeUnits(json,"unit");
 		worldMouse();
 		setTimeout("worldClick()",500);
 		setTimeout("chatKeyboardEvents()",500);
+    setTimeout("gameCycle()", 2000);
 	});
-
 });
 
