@@ -27,12 +27,9 @@ var tilesize=40; // width and height of the tiles (formulas should be scalable, 
 var cursorX, cursorY;
 var runOnce = 0;
 
-
 /*** 
    ** ENGINE API STUFF
    ***/
-
-
 function getIso(tilesize,x,y){
 	// make tiles with the back of the tile at half the width of the tile
 	var isox = Math.round((x - y) * (tilesize * 0.5)) + xoffset;
@@ -91,9 +88,9 @@ jQuery.fn.label = function(text){
 			zindex = $(this).css("zIndex");
 			labelid = "#label" + $(this).attr("id");
 
-		        labelElement =  $(labelid);
-	
-		        if (labelElement.length === 0 ){
+      labelElement =  $(labelid);
+
+      if (labelElement.length === 0 ){
 
 				$("<a>").appendTo("#world").attr("id", "label" + $(this).attr("id"))
 
@@ -109,21 +106,18 @@ jQuery.fn.label = function(text){
 
 		});
 }
-
 /*** 
    ** GAME CODE
    ***/
-
 function gameCycle(){
   // each moving unit should be posted to the server for updates
   $(".unit[selected=true]").each( function(){
     unitid = $(this).attr("id");
-
-    // maybe use post later :)
-    $.getJSON("/click?id=" + clickedTile.attr("id") + "&x-goto=" + clickedTile.attr("x-goto") + "&y-goto=" + clickedTile.attr("y-goto"), function(json){
+    
+    $.getJSON("/moveunit?unitid=" + unitid + "&x-goto=" + clickedTile.attr("x-goto") + "&y-goto=" + clickedTile.attr("y-goto"), function(json){
       //units = json.units;
       placeUnits(json,"unit");
-      showSelectedUnits();	
+      showSelectedUnits();
     });
   });
 
@@ -247,7 +241,6 @@ function worldMouse(){
 /***
    ** Chat
    ***/
-
 function gameChatPoll(){
 	// getJson of latest message /chat every x millseconds
 	$.getJSON("/chat", function(json){
@@ -273,7 +266,6 @@ function chatKeyboardEvents(){
 /***
   ** Initialize
   ***/
-
 $(document).ready(function(){
 	$.getJSON('/unit', function(json){
 		//units = json.units;
