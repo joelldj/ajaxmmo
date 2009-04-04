@@ -114,14 +114,26 @@ function gameCycle(){
   $(".unit[selected=true]").each( function(){
     unitid = $(this).attr("id");
     
+	/**
+		move selected units toward goto position
+	**/
     $.getJSON("/moveunit?unitid=" + unitid + "&x-goto=" + clickedTile.attr("x-goto") + "&y-goto=" + clickedTile.attr("y-goto"), function(json){
-      //units = json.units;
-      placeUnits(json,"unit");
-      showSelectedUnits();
+		// do something with json data, maybe return success (resource data etc..)
     });
+	
+	/**
+	   Get all new player unit data (hence tiles and enemy unit data recursively when you drill down 
+	  **/
+	$.getJSON("/click?id=" + clickedTile.attr("id"), function(json){
+		//units = json.units;
+		placeUnits(json,"unit"); // drill into each unit
+		showSelectedUnits(); // show the selection reticle on the selected units
+	});
+	
+	
   });
 
-  setTimeout("gameCycle()", 2000);
+  setTimeout("gameCycle()", 2000); // rerun in x milliseconds
 }
 
 function selectedUnitsGoto(x,y){
@@ -193,20 +205,20 @@ function placeUnits(json,unitfaction){
 
 	$(units).each(function(i, data){
 		if (unitfaction == "unit"){
-			$.getJSON('/tile?id=' + this.id, placeTiles );
+			$.getJSON('/tile?id=' + this.id, placeTiles ); // show me what my units are seeing
 		}
 	
-		iso = getIso(tilesize,this.x,this.y);
+		iso = getIso(tilesize,this.x,this.y); // convert the units world coordinates to screen coordinates
 			
-		tileElement =  $('#unit' + this.id);
+		tileElement =  $('#unit' + this.id); // select the unit
 		
-		if (tileElement.length === 0 ){			
+		if (tileElement.length === 0 ){ // if unit does not exists
 			$("<div class='" + unitfaction + "'>").appendTo("#world").attr("id", "unit" + this.id);
-			tileElement =  $('#unit' + this.id);
+			tileElement =  $('#unit' + this.id); // select the unit now it has been created "tileElement = ..." above should be possible.
 		}
 	
-		tileElement.sprite(iso, unitfaction, 3) // units are above tiles 
-		.label(this.owner) 
+		tileElement.sprite(iso, unitfaction, 3) // units are above tiles  (3)
+		.label(this.owner)
 		.attr("x", this.x)
 		.attr("y", this.y);
 	});
