@@ -9,7 +9,7 @@ from mainpage import GetTiles
 from mainpage import GetUnits
 from mainpage import InitUnit
 from mainpage import InitTile
-from mainpage import ClickOnTile
+from mainpage import MoveUnit
 
 from chat import UnitMessages
 
@@ -22,7 +22,7 @@ application = webapp.WSGIApplication([
   ('/tile', GetTiles),
   ('/unit', GetUnits),
   ('/inittile', InitTile),
-  ('/click', ClickOnTile),
+  ('/moveunit', MoveUnit),
   ('/chat', UnitMessages)
 ], debug=False)
 

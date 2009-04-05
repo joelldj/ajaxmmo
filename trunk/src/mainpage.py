@@ -136,35 +136,36 @@ class InitUnit(webapp.RequestHandler):
     unit.put()
     
     
-class ClickOnTile(webapp.RequestHandler):
+class MoveUnit(webapp.RequestHandler):
   def get(self):
-    #find out what has been clicked and do the appropriate action
+    #move the unit towards the x and y goto positions    
+    #xy = re.match('tile(\d+)-(\d+)', self.request.get("tile_id")).groups()
+    x_goto = self.request.get("x_goto")
+    y_goto = self.request.get("y_goto")
+    unitID = self.request.get("unitid")
     
-    # if a tile is clicked, move the selected unit towards that tile
-    # find out the x and y coords from the request string
-    # then determine x and y directions
-    xy = re.match('tile(\d+)-(\d+)', self.request.get("id")).groups()
-    clicked_x = int(xy[0])
-    clicked_y = int(xy[1])
-    
-    units = Unit.gql("where user = :1", users.get_current_user() )
+    # just select one unit belonging to user with that id
+    units = Unit.gql("where user = :1 and key.id = :2", users.get_current_user() , unitID )
     
     #move units
     for unit in units:
         
-        if unit.x > clicked_x:
+        if unit.x > x_goto:
             unit.x = unit.x - 1
-        elif unit.x < clicked_x:
+        elif unit.x < x_goto:
             unit.x = unit.x + 1
         
-        if unit.y > clicked_y:    
+        if unit.y > y_goto:    
             unit.y = unit.y - 1
-        elif unit.y < clicked_y:
+        elif unit.y < y_goto:
             unit.y = unit.y + 1
             
         unit.put()
          
-         
+    
+    """
+    # no longer return a string of units, this will be handled by the game cycle
+    
     units = Unit.gql("where user = :1", users.get_current_user() )    
     
     
@@ -175,13 +176,15 @@ class ClickOnTile(webapp.RequestHandler):
         json["units"].append( {"x":unit.x, "y":unit.y, "id":unit.key().id() } )
         
     self.response.out.write(demjson.encode(json))
-
+    """
     
+    self.response.out.write("ok")
+
+
+
 class MenuAction(webapp.RequestHandler):
     def get(self):
         # get the name of the clicked menu action
         action = self.request.get("action")
         
         # process the action
-        
-        
