@@ -113,11 +113,13 @@ function gameCycle(){
   // each moving unit should be posted to the server for updates
   $(".unit[selected=true]").each( function(){
     unitid = $(this).attr("id");
+    unit_x_goto = $(this).attr("x-goto");
+    unit_y_goto = $(this).attr("y-goto");
     
 	/**
 		move selected units toward goto position
 	**/
-    $.getJSON("/moveunit?unitid=" + unitid + "&x-goto=" + clickedTile.attr("x-goto") + "&y-goto=" + clickedTile.attr("y-goto"), function(json){
+    $.getJSON("/moveunit?unitid=" + unitid + "&x-goto=" + unit_x_goto + "&y-goto=" + unit_y_goto , function(json){
 		// do something with json data, maybe return success (resource data etc..)
     });
 	
