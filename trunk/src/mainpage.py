@@ -139,45 +139,26 @@ class InitUnit(webapp.RequestHandler):
 class MoveUnit(webapp.RequestHandler):
   def get(self):
     #move the unit towards the x and y goto positions    
-    #xy = re.match('tile(\d+)-(\d+)', self.request.get("tile_id")).groups()
+    #xy = re.match('tile(\d+)', self.request.get("tile_id")).groups()
     x_goto = self.request.get("x_goto")
     y_goto = self.request.get("y_goto")
-    unitID = self.request.get("unitid")
+    unitID = int(re.match('unit(\d+)', self.request.get("unitid")).group(1))
+
+    # just select the unit with that id
+    unit = Unit.get_by_id(unitID)
     
-    # just select one unit belonging to user with that id
-    units = Unit.gql("where user = :1 and key.id = :2", users.get_current_user() , unitID )
+    if unit.x > x_goto:
+        unit.x = unit.x - 1
+    elif unit.x < x_goto:
+        unit.x = unit.x + 1
     
-    #move units
-    for unit in units:
+    if unit.y > y_goto:    
+        unit.y = unit.y - 1
+    elif unit.y < y_goto:
+        unit.y = unit.y + 1
         
-        if unit.x > x_goto:
-            unit.x = unit.x - 1
-        elif unit.x < x_goto:
-            unit.x = unit.x + 1
-        
-        if unit.y > y_goto:    
-            unit.y = unit.y - 1
-        elif unit.y < y_goto:
-            unit.y = unit.y + 1
-            
-        unit.put()
+    unit.put()
          
-    
-    """
-    # no longer return a string of units, this will be handled by the game cycle
-    
-    units = Unit.gql("where user = :1", users.get_current_user() )    
-    
-    
-    # send units back to the client.
-    json = {"units":[]}
-    
-    for unit in units:
-        json["units"].append( {"x":unit.x, "y":unit.y, "id":unit.key().id() } )
-        
-    self.response.out.write(demjson.encode(json))
-    """
-    
     self.response.out.write("ok")
 
 
