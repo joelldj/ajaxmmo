@@ -122,20 +122,19 @@ function gameCycle(){
     $.getJSON("/moveunit?unitid=" + unitid + "&x-goto=" + unit_x_goto + "&y-goto=" + unit_y_goto , function(json){
 		// do something with json data, maybe return success (resource data etc..)
     });
+    
+  });
 	
 	/**
 	   Get all new player unit data (hence tiles and enemy unit data recursively when you drill down 
 	  **/
-	$.getJSON("/click?id=" + clickedTile.attr("id"), function(json){
+	$.getJSON("/unit", function(json){
 		//units = json.units;
 		placeUnits(json,"unit"); // drill into each unit
 		showSelectedUnits(); // show the selection reticle on the selected units
 	});
-	
-	
-  });
 
-  setTimeout("gameCycle()", 2000); // rerun in x milliseconds
+  setTimeout("gameCycle()", 10000); // rerun in x milliseconds
 }
 
 function selectedUnitsGoto(x,y){
