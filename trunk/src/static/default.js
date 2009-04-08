@@ -134,14 +134,14 @@ function gameCycle(){
 		showSelectedUnits(); // show the selection reticle on the selected units
 	});
 
-  setTimeout("gameCycle()", 10000); // rerun in x milliseconds
+  //setTimeout("gameCycle()", 10000); // rerun in x milliseconds
 }
 
 function selectedUnitsGoto(x,y){
   $(".unit[selected=true]").each(function(){
     $(this).attr("x-goto", x);
     $(this).attr("y-goto", y);
-    $(this).underlay("goto", "goto");
+    $(this).sprite({x:this.x,y:this.y},"goto", -1);
   });
 }
 
@@ -160,8 +160,8 @@ function selectClickedUnit(){
 
 function worldClick(){
 	$(".tile").live("mouseup",function(){
-    selectedUnitsGoto(cursorX, cursorY);
     selectClickedUnit();
+    selectedUnitsGoto(cursorX, cursorY);
 	});
 }
 
