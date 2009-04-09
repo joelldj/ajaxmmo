@@ -134,7 +134,7 @@ function gameCycle(){
 		showSelectedUnits(); // show the selection reticle on the selected units
 	});
 
-  //setTimeout("gameCycle()", 10000); // rerun in x milliseconds
+  setTimeout("gameCycle()", 10000); // rerun in x milliseconds
 }
 
 function selectedUnitsGoto(x,y){
