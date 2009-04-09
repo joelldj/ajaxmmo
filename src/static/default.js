@@ -137,10 +137,10 @@ function gameCycle(){
   setTimeout("gameCycle()", 10000); // rerun in x milliseconds
 }
 
-function selectedUnitsGoto(x,y){
+function selectedUnitsGoto(xgoto,ygoto){
   $(".unit[selected=true]").each(function(){
-    $(this).attr("x-goto", x);
-    $(this).attr("y-goto", y);
+    $(this).attr("x-goto", xgoto);
+    $(this).attr("y-goto", ygoto);
   });
   
   iso = getIso(tilesize,x,y);
