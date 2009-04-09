@@ -141,8 +141,11 @@ function selectedUnitsGoto(x,y){
   $(".unit[selected=true]").each(function(){
     $(this).attr("x-goto", x);
     $(this).attr("y-goto", y);
-    $(this).sprite({x:this.x,y:this.y},"goto", -1);
   });
+  
+  iso = getIso(tilesize,x,y);
+  
+  $("<div class='goto'>").appendTo("#world").sprite(iso,"goto", -1);
 }
 
 function selectClickedUnit(){
@@ -155,6 +158,7 @@ function selectClickedUnit(){
 			} else {
 				clickedUnit.attr("selected","false");
 			}
+
 		}
 }
 
@@ -162,6 +166,7 @@ function worldClick(){
 	$(".tile").live("mouseup",function(){
     selectClickedUnit();
     selectedUnitsGoto(cursorX, cursorY);
+    showSelectedUnits();
 	});
 }
 
