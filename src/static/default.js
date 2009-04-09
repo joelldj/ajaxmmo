@@ -145,7 +145,8 @@ function selectedUnitsGoto(x,y){
   
   iso = getIso(tilesize,x,y);
   
-  $("<div class='goto'>").appendTo("#world").sprite(iso,"goto", -1);
+  $(".goto").remove();
+  $("<div class='goto'>").appendTo("#world").sprite(iso,"goto", 1);
 }
 
 function selectClickedUnit(){
