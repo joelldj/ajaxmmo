@@ -87,12 +87,13 @@ class GetTiles(webapp.RequestHandler):
         
             json["tiles"].append( {"x":x, "y":y, "alt":alt } )
 		
+      """#dont show enemies yet as the map is a bit cramped, crashes my browser
 	    enemyunits = Unit.gql("where x = :1 and y = :2", x, y)
 		
 	    for enemyunit in enemyunits:
                 if enemyunit.user.nickname() != users.get_current_user().nickname():
                     json["enemyunits"].append( {"x":x, "y":y, "id":enemyunit.key().id(), "owner":enemyunit.user.nickname() } )
-
+      """
 			
     self.response.out.write(demjson.encode(json))
 
