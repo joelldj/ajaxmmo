@@ -1,0 +1,32 @@
+<h1>Blog</h1>
+
+<% for post in @posts %>
+   <h2><%=h post.title %></h2>
+   <div class="post-content"><%= post.content[0..1000] %></b></i></u></strong></span></div>
+
+   <%=link_to 'Show', post %>
+
+   <% if logged_in? %>
+			<% if post.author == current_user.login %>
+      	<%= link_to 'Edit', edit_post_path(post) %>
+      	<%= link_to 'Delete', post, :confirm => 'Are you sure?', :method => :delete %>
+   		<% end %>
+	<% end %>
+      
+   <h3>By <%=h post.author %> #<%=h post.user_id %> at <%=h post.created_at.strftime("%d/%m/%Y") %></h3>
+
+<% end %>
+
+<p/>
+
+<%= link_to 'New post', new_post_path %>
+<br>
+
+<% if logged_in? %>
+   Welcome <%= current_user.login %>.
+	 <%= link_to 'Logout', {:action => "logout", :controller => "account"} %>
+<% else %>
+  <%= render :partial => "account/login" %>
+<% end -%>
+
+
