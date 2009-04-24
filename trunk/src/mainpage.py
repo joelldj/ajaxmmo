@@ -82,20 +82,11 @@ class GetTiles(webapp.RequestHandler):
     
     for x in range(xleft, xright):
         for y in range(ytop, ybottom):
-            
-	    alt = GetHeightAt(x,y,ImageData)
-        
-            json["tiles"].append( {"x":x, "y":y, "alt":alt } )
-		
-      """#dont show enemies yet as the map is a bit cramped, crashes my browser
-	    enemyunits = Unit.gql("where x = :1 and y = :2", x, y)
-		
-	    for enemyunit in enemyunits:
-                if enemyunit.user.nickname() != users.get_current_user().nickname():
-                    json["enemyunits"].append( {"x":x, "y":y, "id":enemyunit.key().id(), "owner":enemyunit.user.nickname() } )
-      """
-			
+          alt = GetHeightAt(x,y,ImageData)
+          json["tiles"].append( {"x":x, "y":y, "alt":alt } )
+          
     self.response.out.write(demjson.encode(json))
+
 
 class GetUnits(webapp.RequestHandler):
     def get(self):
