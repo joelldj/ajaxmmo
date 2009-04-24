@@ -1,0 +1,15 @@
+<% if logged_in? -%>
+
+<h3>Username:<%= current_user.login %> </h3>
+Registered Users:
+<%= User.find(:all).collect(&:login).to_sentence %>
+<br/>
+<%= link_to 'Log out', :action => 'logout' %>
+
+<% else %>
+
+<%= render_partial "login" %>
+<%= link_to "I don't have an account!", { :action => "signup" } %>
+
+<% end -%>
+
