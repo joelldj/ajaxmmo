@@ -26,6 +26,9 @@
     /* create a Tile object */
     _blankTile = [[Tile alloc] initWithFrame:CGRectMake(0,0,40,40)];
 
+    /* reposition object */
+    [_blankTile setFrameOrigin:CGPointMake(40,40)];
+
     /* add the tile to the window */
     [contentView addSubview:_blankTile];
     [theWindow orderFront:self];
