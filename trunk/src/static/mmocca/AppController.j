@@ -23,21 +23,28 @@
    /* Set the background color of contentview to black */
    [contentView setBackgroundColor:[CPColor blackColor]]; 
 
+   /* array to put tiles in, size of tile, offset to move the tiles to. */
    _tileArray = [CPMutableArray array];
-   for (x=0;x<10;x++){
-     for (y=0;y<10;y++){
+   tileSize = 40;
+   var xoffset = 850, yoffset = -150;
+
+   for (x=0;x<5;x++){
+     for (y=0;y<5;y++){
       /* create a Tile object */
-      var _blankTile = [[Tile alloc] initWithFrame:CGRectMake(0,0,40,40)];
+      var _blankTile = [[Tile alloc] initWithFrame:CGRectMake(0,0,tileSize,tileSize)];
 
       /* reposition object */
-      [_blankTile setFrameOrigin:CGPointMake(40*x,40*y)];
+      
+      // return the x and y coordinates of isometrical positions.
+      var screenx = Math.round((x - y) * (tileSize * 0.5)) + xoffset;
+      var screeny = Math.round((x + y) * (tileSize * 0.25)) - yoffset;
+      
+      [_blankTile setFrameOrigin:CGPointMake(screenx,screeny)];
 
       [_tileArray addObject:_blankTile];
    
       /* add the tile to the window */
       [contentView addSubview:[_tileArray lastObject]];
-      console.log("x: " + x*5 + " y:" + y*5);
-
      }
     }
 
