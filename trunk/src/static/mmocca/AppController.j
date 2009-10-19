@@ -11,26 +11,36 @@
 
 @implementation AppController : CPObject
 {
-  CPView _blankTile;
+//  CPView _blankTile;
 }
 
 - (void)applicationDidFinishLaunching:(CPNotification)aNotification
 {
-    /* Create the window */
-    var theWindow = [[CPWindow alloc] initWithContentRect:CGRectMakeZero() styleMask:CPBorderlessBridgeWindowMask],
-        contentView = [theWindow contentView];
+   /* Create the window */
+   var theWindow = [[CPWindow alloc] initWithContentRect:CGRectMakeZero() styleMask:CPBorderlessBridgeWindowMask],
+       contentView = [theWindow contentView];
 
-    /* Set the background color of contentview to black */
-    [contentView setBackgroundColor:[CPColor blackColor]]; 
+   /* Set the background color of contentview to black */
+   [contentView setBackgroundColor:[CPColor blackColor]]; 
 
-    /* create a Tile object */
-    _blankTile = [[Tile alloc] initWithFrame:CGRectMake(0,0,40,40)];
+   _tileArray = [CPMutableArray array];
+   for (x=0;x<10;x++){
+     for (y=0;y<10;y++){
+      /* create a Tile object */
+      var _blankTile = [[Tile alloc] init];
+      [_blankTile setBounds:CGRectMake(0,0,40,40)];
 
-    /* reposition object */
-    [_blankTile setFrameOrigin:CGPointMake(40,40)];
+      /* reposition object */
+      [_blankTile setFrameOrigin:CGPointMake(5*x,5*y)];
 
-    /* add the tile to the window */
-    [contentView addSubview:_blankTile];
+      [_tileArray addObject:_blankTile];
+   
+      /* add the tile to the window */
+      [contentView addSubview:[_tileArray lastObject]];
+      console.log("x: " + x*5 + " y:" + y*5);
+     }
+    }
+
     [theWindow orderFront:self];
 }
 
