@@ -27,17 +27,17 @@
    for (x=0;x<10;x++){
      for (y=0;y<10;y++){
       /* create a Tile object */
-      var _blankTile = [[Tile alloc] init];
-      [_blankTile setBounds:CGRectMake(0,0,40,40)];
+      var _blankTile = [[Tile alloc] initWithFrame:CGRectMake(0,0,40,40)];
 
       /* reposition object */
-      [_blankTile setFrameOrigin:CGPointMake(5*x,5*y)];
+      [_blankTile setFrameOrigin:CGPointMake(40*x,40*y)];
 
       [_tileArray addObject:_blankTile];
    
       /* add the tile to the window */
       [contentView addSubview:[_tileArray lastObject]];
       console.log("x: " + x*5 + " y:" + y*5);
+
      }
     }
 
