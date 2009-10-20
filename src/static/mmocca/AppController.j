@@ -19,6 +19,7 @@
    /* Create the window */
    var theWindow = [[CPWindow alloc] initWithContentRect:CGRectMakeZero() styleMask:CPBorderlessBridgeWindowMask],
        contentView = [theWindow contentView];
+   [theWindow setAcceptsMouseMovedEvents:YES];
 
    /* Set the background color of contentview to black */
    [contentView setBackgroundColor:[CPColor blackColor]]; 
