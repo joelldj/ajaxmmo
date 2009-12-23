@@ -30,7 +30,7 @@ var runOnce = 0;
 /*** 
    ** ENGINE API STUFF
    ***/
-function getIso(tilesize,x,y){
+function getIso(tilesize,x,y){ // #todo add Z : Y
 	// make tiles with the back of the tile at half the width of the tile
 	var isox = Math.round((x - y) * (tilesize * 0.5)) + xoffset;
 	var isoy = Math.round((x + y) * (tilesize * 0.25)) - yoffset;
@@ -143,7 +143,7 @@ function selectedUnitsGoto(xgoto,ygoto){
     $(this).attr("y-goto", ygoto);
   });
   
-  iso = getIso(tilesize,x,y);
+  iso = getIso(tilesize,xgoto,ygoto);
   
   $(".goto").remove();
   $("<div class='goto'>").appendTo("#world").sprite(iso,"goto", 1);
@@ -202,8 +202,6 @@ function placeTiles(json){
 }
 
 function placeUnits(json,unitfaction){
-	var unitfaction;
-
 	if (unitfaction == "unit"){
 		units = json.units;
 	} else {
