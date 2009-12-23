@@ -110,36 +110,45 @@ jQuery.fn.label = function(text){
    ** GAME CODE
    ***/
 function gameCycle(){
-  // each moving unit should be posted to the server for updates
-  $(".unit[selected=true]").each( function(){
-    unitid = $(this).attr("id");
-    unit_x_goto = $(this).attr("x-goto");
-    unit_y_goto = $(this).attr("y-goto");
+    // each moving unit should be posted to the server for updates
+    $(".unit[selected=true]").each( function(){
+        unitid = $(this).attr("id");
+        unit_x_goto = $(this).attr("x-goto");
+        unit_y_goto = $(this).attr("y-goto");
 
-    //console.log(unit_x_goto + "/" + unit_y_goto);
+        //console.log(unit_x_goto + "/" + unit_y_goto);
 
-    /**
-            move selected units toward goto position
-    **/
-    $.getJSON("/moveunit?unitid=" + unitid + "&x-goto=" + unit_x_goto + "&y-goto=" + unit_y_goto , function(json){
-		// do something with json data, maybe return success (resource data etc..)
+        /**
+                move selected units toward goto position
+        **/
+        $.getJSON("/moveunit?unitid=" + unitid + "&x-goto=" + unit_x_goto + "&y-goto=" + unit_y_goto , function(json){
+                    // do something with json data, maybe return success (resource data etc..)
+        });
     });
-  });
 	
-	/**
-	   Get all new player unit data (hence tiles and enemy unit data recursively when you drill down 
-	  **/
-	$.getJSON("/unit", function(json){
-		//units = json.units;
-		placeUnits(json,"unit"); // drill into each unit
-		showSelectedUnits(); // show the selection reticle on the selected units
-	});
+    /**
+       Get all new player unit data (hence tiles and enemy unit data recursively when you drill down
+      **/
+    $.getJSON("/unit", function(json){
+        //units = json.units;
+        placeUnits(json,"unit"); // drill into each unit
+        showSelectedUnits(); // show the selection reticle on the selected units
+    });
 
-  setTimeout("gameCycle()", 10000); // rerun in x milliseconds
+    // if no units are selected then remove the goto marker
+    if (getSelectedUnits().length==0){
+        $(".goto").remove();
+    }
+
+    setTimeout("gameCycle()", 10000); // rerun in x milliseconds
+}
+
+function getSelectedUnits(){
+    return $(".unit[selected=true]");
 }
 
 function selectedUnitsGoto(xgoto,ygoto){
-  selectedUnits = $(".unit[selected=true]");
+  selectedUnits = getSelectedUnits();
 
   //console.log(selectedUnits.length);
 
@@ -163,16 +172,16 @@ function selectClickedUnit(){
 
     if (clickedUnit.length > 0){
             // toggle unit selection
-            if (clickedUnit.attr("selected") == "false"){
-                    clickedUnit.attr("selected","true");
-            } else {
+            if (clickedUnit.attr("selected") == "true"){
                     clickedUnit.attr("selected","false");
+            } else {
+                    clickedUnit.attr("selected","true");
             }
     }
 }
 
 function worldClick(){
-    $(".tile").live("mouseup",function(){
+    $(".tile").live("click",function(){
         selectClickedUnit();
         selectedUnitsGoto(cursorX, cursorY);
         showSelectedUnits();
