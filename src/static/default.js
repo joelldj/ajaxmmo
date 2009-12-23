@@ -141,12 +141,12 @@ function gameCycle(){
 function selectedUnitsGoto(xgoto,ygoto){
   selectedUnits = $(".unit[selected=true]");
 
-  console.log(selectedUnits.length);
+  //console.log(selectedUnits.length);
 
   if (selectedUnits.length){
 
       for(i = 0;i < selectedUnits.length;i++){
-        console.log(selectedUnits[i]);
+        //console.log(selectedUnits[i]);
         $(selectedUnits[i]).attr("x-goto", xgoto);
         $(selectedUnits[i]).attr("y-goto", ygoto);
       }
