@@ -115,14 +115,15 @@ function gameCycle(){
     unitid = $(this).attr("id");
     unit_x_goto = $(this).attr("x-goto");
     unit_y_goto = $(this).attr("y-goto");
-    
-	/**
-		move selected units toward goto position
-	**/
+
+    //console.log(unit_x_goto + "/" + unit_y_goto);
+
+    /**
+            move selected units toward goto position
+    **/
     $.getJSON("/moveunit?unitid=" + unitid + "&x-goto=" + unit_x_goto + "&y-goto=" + unit_y_goto , function(json){
 		// do something with json data, maybe return success (resource data etc..)
     });
-    
   });
 	
 	/**
@@ -150,25 +151,24 @@ function selectedUnitsGoto(xgoto,ygoto){
 }
 
 function selectClickedUnit(){
-		clickedUnit = $(".unit[x="+cursorX+"][y="+cursorY+"]");
+    clickedUnit = $(".unit[x="+cursorX+"][y="+cursorY+"]");
 
-		if (clickedUnit.length > 0){
-			// toggle unit selection
-			if (clickedUnit.attr("selected") == "false"){
-				clickedUnit.attr("selected","true");
-			} else {
-				clickedUnit.attr("selected","false");
-			}
-
-		}
+    if (clickedUnit.length > 0){
+            // toggle unit selection
+            if (clickedUnit.attr("selected") == "false"){
+                    clickedUnit.attr("selected","true");
+            } else {
+                    clickedUnit.attr("selected","false");
+            }
+    }
 }
 
 function worldClick(){
-	$(".tile").live("mouseup",function(){
-    selectClickedUnit();
-    selectedUnitsGoto(cursorX, cursorY);
-    showSelectedUnits();
-	});
+    $(".tile").live("mouseup",function(){
+        selectClickedUnit();
+        selectedUnitsGoto(cursorX, cursorY);
+        showSelectedUnits();
+    });
 }
 
 function placeTiles(json){
@@ -230,8 +230,8 @@ function placeUnits(json,unitfaction){
 }
 
 function showSelectedUnits(){
-	$(".reticle").remove();
-  $(".unit[selected=true]").underlay("unitselect", "reticle");
+    $(".reticle").remove();
+    $(".unit[selected=true]").underlay("unitselect", "reticle");
 } 
 
 function drawCursor(x,y){
@@ -290,7 +290,7 @@ $(document).ready(function(){
 		worldMouse();
 		setTimeout("worldClick()",500);
 		setTimeout("chatKeyboardEvents()",500);
-    setTimeout("gameCycle()", 2000);
+                setTimeout("gameCycle()", 2000);
 	});
 });
 
