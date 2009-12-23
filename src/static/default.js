@@ -139,15 +139,23 @@ function gameCycle(){
 }
 
 function selectedUnitsGoto(xgoto,ygoto){
-  $(".unit[selected=true]").each(function(){
-    $(this).attr("x-goto", xgoto);
-    $(this).attr("y-goto", ygoto);
-  });
+  selectedUnits = $(".unit[selected=true]");
+
+  console.log(selectedUnits.length);
+
+  if (selectedUnits.length){
+
+      for(i = 0;i < selectedUnits.length;i++){
+        console.log(selectedUnits[i]);
+        $(selectedUnits[i]).attr("x-goto", xgoto);
+        $(selectedUnits[i]).attr("y-goto", ygoto);
+      }
   
-  iso = getIso(tilesize,xgoto,ygoto);
-  
-  $(".goto").remove();
-  $("<div class='goto'>").appendTo("#world").sprite(iso,"goto", 1);
+      iso = getIso(tilesize,xgoto,ygoto);
+
+      $(".goto").remove();
+      $("<div class='goto'>").appendTo("#world").sprite(iso,"goto", 1);
+  }
 }
 
 function selectClickedUnit(){
