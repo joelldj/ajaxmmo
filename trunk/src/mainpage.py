@@ -132,8 +132,8 @@ class MoveUnit(webapp.RequestHandler):
   def get(self):
     #move the unit towards the x and y goto positions    
     #xy = re.match('tile(\d+)', self.request.get("tile_id")).groups()
-    x_goto = self.request.get("x_goto")
-    y_goto = self.request.get("y_goto")
+    x_goto = int(self.request.get("x-goto"))
+    y_goto = int(self.request.get("y-goto"))
     unitID = int(re.match('unit(\d+)', self.request.get("unitid")).group(1))
 
     # just select the unit with that id
@@ -143,7 +143,6 @@ class MoveUnit(webapp.RequestHandler):
         unit.x = unit.x - 1
     elif unit.x < x_goto:
         unit.x = unit.x + 1
-    
     if unit.y > y_goto:    
         unit.y = unit.y - 1
     elif unit.y < y_goto:
