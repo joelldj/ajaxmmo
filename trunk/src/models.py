@@ -9,7 +9,7 @@ class Tile(db.Model):
     x = db.IntegerProperty()
     y = db.IntegerProperty()
     height = db.IntegerProperty()
-    type = db.IntegerProperty()
+    type = db.ReferenceProperty(TileType)
 
 class Faction(db.Model): # spain, france...
     name = db.StringProperty()
