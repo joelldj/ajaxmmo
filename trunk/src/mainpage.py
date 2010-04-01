@@ -20,6 +20,8 @@ import os
 
 import demjson
 
+landheight = 81
+
 def FetchImage(filename):
     pngfile = urlfetch.fetch(url=filename).content
     
@@ -64,8 +66,8 @@ class GetTiles(webapp.RequestHandler):
   def get(self):
 
     map = memcache.get("map")
-    ImageData = FetchImage("http://humanitymmo.appspot.com/static/earthmini.png")
-    w,h = ImageData[:2]
+    HeightMapData = FetchImage("http://humanitymmo.appspot.com/static/earthmini.png")
+    w,h = HeightMapData[:2]
 
     # should get the tiles, within proximity of units.
     # foreach unit, get tiles within range of the unit
@@ -79,11 +81,35 @@ class GetTiles(webapp.RequestHandler):
     xright = min(unit.x + fov + 1, w)
     ytop = max(unit.y - fov, 0)
     ybottom = min(unit.y + fov + 1, h)
-    
+
+    # get heightmap based tiles
     for x in range(xleft, xright):
         for y in range(ytop, ybottom):
-          alt = GetHeightAt(x,y,ImageData)
-          json["tiles"].append( {"x":x, "y":y, "alt":alt } )
+          # is the tile in the datastore
+          curTile = Tile.gql("where x = :1 and y = :2", x,y)
+          if curTile.count() > 0:
+              if curTile.type.canTravel:
+                 curAlt = 80
+              else:
+                 curAlt = 81
+
+              json["tiles"].append( {"x":curTile.x,"y":curTile.y,"alt":curAlt} )
+          else
+              alt = GetHeightAt(x,y,HeightMapData)
+              json["tiles"].append( {"x":x, "y":y, "alt":alt } )
+              # write to datastore
+              t = Tile()
+              t.x = x
+              t.y = y
+              t.height = alt
+              
+              if alt < 81:
+                # get tile type where name = water, then reference it
+
+              else:
+                # get tile type for land
+
+              t.put()
           
     self.response.out.write(demjson.encode(json))
 
@@ -136,21 +162,26 @@ class MoveUnit(webapp.RequestHandler):
     y_goto = int(self.request.get("y-goto"))
     unitID = int(re.match('unit(\d+)', self.request.get("unitid")).group(1))
 
-    # just select the unit with that id
-    unit = Unit.get_by_id(unitID)
+    destinationTile = Tile.gql("where x = :1 ans y = :2",x_goto, y_goto);
+
+    if destinationTile.type.canTravel:
+       # just select the unit with that id
+       unit = Unit.get_by_id(unitID)
     
-    if unit.x > x_goto:
-        unit.x = unit.x - 1
-    elif unit.x < x_goto:
-        unit.x = unit.x + 1
-    if unit.y > y_goto:    
-        unit.y = unit.y - 1
-    elif unit.y < y_goto:
-        unit.y = unit.y + 1
+       if unit.x > x_goto:
+          unit.x = unit.x - 1
+       elif unit.x < x_goto:
+          unit.x = unit.x + 1
+       if unit.y > y_goto:    
+          unit.y = unit.y - 1
+       elif unit.y < y_goto:
+          unit.y = unit.y + 1
         
-    unit.put()
-         
-    self.response.out.write("ok")
+       unit.put()
+
+       self.response.out.write("ok")
+    else:   
+       self.response.out.write("obstructed")
 
 
 
